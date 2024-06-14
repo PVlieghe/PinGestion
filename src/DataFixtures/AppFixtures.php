@@ -30,7 +30,23 @@ class AppFixtures extends Fixture
             )
         );
         $firstUser->setRoles(['ROLE_ADMIN']);
+
+        $secondUser = new User();
+        $secondUser->setEmail('user1@user.fr');
+        $secondUser->setUsername('Mr Utilisateur 1');
+        
+        // encode the plain password
+        $secondUser->setPassword(
+            $this->passwordHasher->hashPassword(
+                $secondUser,
+                'User1'
+            )
+        );
+
         $manager->persist($firstUser);
+        $manager->persist($secondUser);
+        
+
 
         $manager->flush();
     }

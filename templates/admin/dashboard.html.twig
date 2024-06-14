@@ -1,0 +1,216 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+<div class="body">
+       <style>
+            body {
+            background-color: #f2f2f2; /* Fond d'écran gris */
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-container, .form-container {
+            flex: 1;
+            margin: 10px;
+        }
+        .form-container {
+            max-width: 400px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: black;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Ligne de fond gris clair */
+        }
+        tr:nth-child(odd) {
+            background-color: #fff; /* Ligne de fond blanc */
+        }
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+
+<body>
+    <div class="container">
+       <div class="row mb-3">
+            <h2 class="col mb-0">Liste des utilisateurs</h2>
+            <div  class="col" style="display:contents">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+              <i class="bi bi-person-plus"></i>  ajouter 
+            </button>
+            </div>
+        </div>
+        {% if success %}
+            <div id="success" class="row">
+                <div class="alert alert-success" role="alert">
+                     {{ success }}
+                </div>
+            </div>
+        {% endif %}
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-mg" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Création d'un utilisateur</h5>
+
+            </div>
+            <div class="modal-body">
+                {{ form_start(form)}}
+                <div class="row">
+                    {{ form_row(form.email)}}
+                </div>
+                <div class="row mt-3">
+                    {{ form_row(form.username)}}
+                </div>
+                <div class="row mt-3">
+                     {{ form_row(form.password) }}
+                </div>
+                <div class="row mt-3 ">
+                    <label>Rôle(s)</label>
+                </div>
+                <div class="row">
+                    
+                    <div class="col-4 d-inline-flex">
+                        <div class="form-check form-check-inline">
+                            {{ form_row(form.role_compta)}}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-check form-check-inline ">
+                            {{ form_row(form.role_atelier)}}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-check form-check-inline ">
+                            {{ form_row(form.role_admin)}}
+                        </div>
+                    </div>
+                </div>
+                
+                    
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
+                <button type="submit" class="btn btn-primary">Valider</button>
+            </div>{{ form_end(form)}}
+            </div>
+        </div>
+        </div>
+        <input type="text" id="searchInput" onkeyup="searchUsers()" placeholder="Rechercher un utilisateur... (email)">
+        <div class="row">
+            <table id="usersTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom d'utilisateur</th>
+                        <th>Email</th>
+                        <th>Roles</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                                  <td>
+                    {% if 'ROLE_ADMIN' not in user.roles %}
+                        <a  class="btn btn-success btn-sm rounded" href="{{ path('app_admin_adminup', {'id': user.id}) }}"><i class="bi bi-person-check"></i>  admin</a>
+                    {% else %}
+                        <a class="btn btn-warning btn-sm rounded" href="{{ path('app_admin_admindown', {'id': user.id}) }}"><i class="bi bi-person-dash"></i>  admin</a>
+                    {% endif %}
+
+                    {% if 'ROLE_ATELIER' not in user.roles %}
+                        <form action="{{ path('app_admin_atelierup', {'id': user.id}) }}" method="post" class="d-inline">
+                            <button type"submit" class="btn btn-success btn-sm rounded"><i class="bi bi-person-check"></i>  atelier</button>
+                        </form>
+                    {% else %}
+                        <form action="{{ path('app_admin_atelierdown', {'id': user.id}) }}" method="post" class="d-inline">
+                            <button type"submit" class="btn btn-warning btn-sm rounded"><i class="bi bi-person-dash"></i>  atelier</button>
+                        </form>
+                    {% endif %}
+
+                    {% if 'ROLE_COMPTA' not in user.roles %}
+                        <form action="{{ path('app_admin_comptaup', {'id': user.id}) }}" method="post" class="d-inline">
+                            <button type"submit" class="btn btn-success btn-sm rounded"><i class="bi bi-person-check"></i>  compta</button>
+                        </form>
+                    {% else %}
+                        <form action="{{ path('app_admin_comptadown', {'id': user.id}) }}" method="post" class="d-inline">
+                            <button type"submit" class="btn btn-warning btn-sm rounded"><i class="bi bi-person-dash"></i>  compta</button>
+                        </form>
+                    {% endif %}
+                </td>
+                <td>
+                    <form action="{{ path('app_user_delete', {'id': user.id}) }}" method="post" class="d-inline" onsubmit="return confirm('La suppression d'un utilisateur entraînera celle de ses recettes ainsi que de ses commentaires, voulez-vous continuer ?');">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                     <button type="submit" class="btn btn-info btn-sm">
+                            <i class="bi bi-pencil"></i>
+                    </button>
+                </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function searchUsers() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("usersTable");
+            tr = table.getElementsByTagName("tr");
+
+            // Suppose the email is in the second column (index 1)
+            var emailColumnIndex = 2;
+
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                if (td[emailColumnIndex]) {
+                    txtValue = td[emailColumnIndex].textContent || td[emailColumnIndex].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    }
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>
+</div> 
+{% endblock %}
