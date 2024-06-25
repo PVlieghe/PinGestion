@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Operation;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
@@ -45,6 +46,13 @@ class AppFixtures extends Fixture
 
         $manager->persist($firstUser);
         $manager->persist($secondUser);
+
+        for($i=0; $i<20; $i++){
+            $ope = new Operation();
+            $ope->setContent("opération".$i);
+            $manager->persist($ope);
+        }
+        
         
 
 

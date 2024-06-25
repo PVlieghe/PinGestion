@@ -1,0 +1,151 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gamme index{% endblock %}
+
+{% block body %}
+<div class="body">
+       <style>
+            body {
+            background-color: #f2f2f2; /* Fond d'écran gris */
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-container, .form-container {
+            flex: 1;
+            margin: 10px;
+        }
+        .form-container {
+            max-width: 400px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: black;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Ligne de fond gris clair */
+        }
+        tr:nth-child(odd) {
+            background-color: #fff; /* Ligne de fond blanc */
+        }
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+
+<body>
+    <div class="container">
+       <div class="row mb-3">
+            <h2 class="col mb-0">Liste des opérations</h2>
+            <div  class="col" style="display:contents">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+              <i class="bi bi-person-plus"></i>  Ajouter 
+            </button>
+            </div>
+        </div>
+        {% if success %}
+            <div id="success" class="row">
+                <div class="alert alert-success" role="alert">
+                     {{ success }}
+                </div>
+            </div>
+        {% endif %}
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-mg" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ajout d'une opération.</h5>
+
+            </div>
+            <div class="modal-body">
+                {{ form_start(form, {'action': path('app_operation_new')})}}
+                <div class="row">
+                    {{ form_row(form.content)}}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
+                <button type="submit" class="btn btn-primary">Valider</button>
+            </div>{{ form_end(form)}}
+            </div>
+        </div>
+        </div>
+        <input type="text" id="searchInput" onkeyup="searchOperation()" placeholder="Rechercher une opération... (nom)">
+        <div class="row">
+            <table id="operationTable">
+                <thead>
+                    <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for operation in operations %}
+                    <tr>
+                        <td>{{ operation.id }}</td>
+                        <td>{{ operation.Content }}</td>
+                        <td>
+                            <a href="{{ path('app_operation_edit', {'id': operation.id}) }}">edit</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function searchOperation() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("operationTable");
+            tr = table.getElementsByTagName("tr");
+
+            
+            var nameColumnIndex = 1;
+
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                if (td[nameColumnIndex]) {
+                    txtValue = td[nameColumnIndex].textContent || td[nameColumnIndex].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    }
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>
+</div> 
+{% endblock %}
+

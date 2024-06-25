@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Form;
+
+use App\Entity\Gamme;
+use App\Entity\Piece;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class PieceType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add('name')
+            ->add('libelle')
+            ->add('prix_vente', NumberType::class, [
+                'required' => false
+                ])
+            ->add('prix_achat', NumberType::class, [
+                'required' => false
+                ])
+            ->add('intermediaire')
+            ->add('fabrique')
+            ->add('stock')
+            ->add('gamme', EntityType::class, [
+                'class' => Gamme::class,
+                'choice_label' => 'id',
+                'required' => false,
+            ])
+        ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Piece::class,
+        ]);
+    }
+}

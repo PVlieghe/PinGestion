@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -34,6 +36,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $username = null;
+
+    /**
+     * @var Collection<int, Gamme>
+     */
+    #[ORM\OneToMany(targetEntity: Gamme::class, mappedBy: 'referent')]
+    private Collection $gammes;
+
+    /**
+     * @var Collection<int, QualifPoste>
+     */
+    #[ORM\OneToMany(targetEntity: QualifPoste::class, mappedBy: 'usr', orphanRemoval: true)]
+    private Collection $qualifPostes;
+
+    public function __construct()
+    {
+        $this->gammes = new ArrayCollection();
+        $this->qualifPostes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -117,6 +137,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUsername(string $username): static
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Gamme>
+     */
+    public function getGammes(): Collection
+    {
+        return $this->gammes;
+    }
+
+    public function addGamme(Gamme $gamme): static
+    {
+        if (!$this->gammes->contains($gamme)) {
+            $this->gammes->add($gamme);
+            $gamme->setReferent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGamme(Gamme $gamme): static
+    {
+        if ($this->gammes->removeElement($gamme)) {
+            // set the owning side to null (unless already changed)
+            if ($gamme->getReferent() === $this) {
+                $gamme->setReferent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, QualifPoste>
+     */
+    public function getQualifPostes(): Collection
+    {
+        return $this->qualifPostes;
+    }
+
+    public function addQualifPoste(QualifPoste $qualifPoste): static
+    {
+        if (!$this->qualifPostes->contains($qualifPoste)) {
+            $this->qualifPostes->add($qualifPoste);
+            $qualifPoste->setUsr($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQualifPoste(QualifPoste $qualifPoste): static
+    {
+        if ($this->qualifPostes->removeElement($qualifPoste)) {
+            // set the owning side to null (unless already changed)
+            if ($qualifPoste->getUsr() === $this) {
+                $qualifPoste->setUsr(null);
+            }
+        }
 
         return $this;
     }
