@@ -46,7 +46,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, QualifPoste>
      */
-    #[ORM\OneToMany(targetEntity: QualifPoste::class, mappedBy: 'usr', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: QualifPoste::class, mappedBy: 'usr', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $qualifPostes;
 
     public function __construct()

@@ -21,13 +21,13 @@ class Poste
     /**
      * @var Collection<int, QualifPoste>
      */
-    #[ORM\OneToMany(targetEntity: QualifPoste::class, mappedBy: 'poste', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: QualifPoste::class, mappedBy: 'poste', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $qualifPostes;
 
     /**
      * @var Collection<int, QualifMachine>
      */
-    #[ORM\OneToMany(targetEntity: QualifMachine::class, mappedBy: 'poste', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: QualifMachine::class, mappedBy: 'poste', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $qualifMachines;
 
     public function __construct()

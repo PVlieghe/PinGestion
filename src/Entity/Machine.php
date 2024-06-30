@@ -21,14 +21,15 @@ class Machine
     /**
      * @var Collection<int, QualifOperation>
      */
-    #[ORM\OneToMany(targetEntity: QualifOperation::class, mappedBy: 'Machine', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: QualifOperation::class, mappedBy: 'Machine', orphanRemoval: true, cascade:['persist', 'remove'])]
     private Collection $qualifOperations;
 
     /**
      * @var Collection<int, QualifMachine>
      */
-    #[ORM\OneToMany(targetEntity: QualifMachine::class, mappedBy: 'machine', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: QualifMachine::class, mappedBy: 'machine', orphanRemoval: true, cascade:['persist', 'remove'])]
     private Collection $qualifMachines;
+
 
     public function __construct()
     {

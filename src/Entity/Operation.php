@@ -21,7 +21,7 @@ class Operation
     /**
      * @var Collection<int, CompoGamme>
      */
-    #[ORM\OneToMany(targetEntity: CompoGamme::class, mappedBy: 'operation', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: CompoGamme::class, mappedBy: 'operation', orphanRemoval: true, cascade:['persist', 'remove'])]
     private Collection $compoGamme;
 
     /**
@@ -33,7 +33,7 @@ class Operation
     /**
      * @var Collection<int, QualifOperation>
      */
-    #[ORM\OneToMany(targetEntity: QualifOperation::class, mappedBy: 'operation', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: QualifOperation::class, mappedBy: 'operation', orphanRemoval: true,  cascade:['persist', 'remove'])]
     private Collection $qualifOperations;
 
     public function __construct()
@@ -149,4 +149,5 @@ class Operation
 
         return $this;
     }
+
 }

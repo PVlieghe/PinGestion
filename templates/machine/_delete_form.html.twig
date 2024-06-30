@@ -1,0 +1,6 @@
+<form method="post" action="{{ path('app_machine_delete', {'id': machine.id}) }}" onsubmit="return confirm('Etes-vous sûr de vouloir supprimer cette machine?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ machine.id) }}">
+    <button class="btn btn-danger">
+        <i class="bi bi-trash"></i>
+    </button>
+</form>

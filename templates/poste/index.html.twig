@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des opérations{% endblock %}
+{% block title %}Liste des postes{% endblock %}
 
 {% block body %}
 <div class="body">
@@ -60,9 +60,9 @@
 <body>
     <div class="container">
         <div class="row mb-3">
-            <h2 class="col mb-0">Liste des opérations</h2>
+            <h2 class="col mb-0">Liste des postes</h2>
             <div  class="col" style="display:contents">
-                <span data-toggle="tooltip" title="Créer une opération">
+                <span data-toggle="tooltip" title="Ajouter un poste :">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajoutModal">
                         <i class="bi bi-plus"></i>  Ajouter 
                     </button>
@@ -81,51 +81,51 @@
             <div class="modal-dialog modal-mg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="ajoutModalLabel">Ajout d'une opération.</h5>
+                        <h5 class="modal-title" id="ajoutModalLabel">Ajout d'un poste.</h5>
                     </div>
                     <div class="modal_nav">
                         <ul class="nav nav-tabs" id="addTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="add-content-tab" data-toggle="tab" href="#add-content" role="tab" aria-controls="add-content" aria-selected="true">Nom</a>
+                                <a class="nav-link active" id="add-name-tab" data-toggle="tab" href="#add-name" role="tab" aria-controls="add-name" aria-selected="true">Nom</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="add-gamme-tab" data-toggle="tab" href="#add-gamme" role="tab" aria-controls="add-gamme" aria-selected="false">Gammes</a>
+                                <a class="nav-link" id="add-machine-tab" data-toggle="tab" href="#add-machine" role="tab" aria-controls="add-machine" aria-selected="false">Machines</a>
                             </li>
                             <li class="nav-item">
-                                <a class = "nav-link" id="add-machine-tab" data-toggle="tab" href="#add-machine" role="tab" aria-controls="add-machine" aria-selected="false">Machines</a>
+                                <a class = "nav-link" id="add-user-tab" data-toggle="tab" href="#add-user" role="tab" aria-controls="add-user" aria-selected="false">Ouvriers</a>
                             </li>
                         </ul>
                     </div>   
-                    {{ form_start(form, {'action': path('app_operation_new')})}}
+                    {{ form_start(form, {'action': path('app_poste_new')})}}
                     <div class="modal-body">
-                        <div class = "tab-content" id="addOpeContent">
-                            <div class ="tab-pane fade show active" id="add-content" role="tabpanel" aria-labelledby="add-content-tab">
+                        <div class = "tab-content" id="addPosteName">
+                            <div class ="tab-pane fade show active" id="add-name" role="tabpanel" aria-labelledby="add-name-tab">
                                 <div class="row">
-                                    {{ form_label(form.content)}}
-                                    {{ form_widget(form.content)}}
+                                    {{ form_label(form.name)}}
+                                    {{ form_widget(form.name)}}
                                 </div>
                             </div>
-                            <div class ="tab-pane fade show" id="add-gamme" role="tabpanel" aria-labelledby="add-gamme-tab">
+                            <div class ="tab-pane fade show" id="add-machine" role="tabpanel" aria-labelledby="add-machine-tab">
                                 <div class="row">
-                                    <div id="gammeOpe" data-prototype="{{ form_widget(form.compoGamme.vars.prototype)|e('html_attr') }}">
+                                    <div id="machinePoste" data-prototype="{{ form_widget(form.qualifMachines.vars.prototype)|e('html_attr') }}">
                                         <div class="mb-4 align-items-center">
-                                            {{ form_label(form.compoGamme)}}
+                                            {{ form_label(form.qualifMachines)}}
                                         </div>
                                         <span>
-                                            {{ form_widget(form.compoGamme)}}
+                                            {{ form_widget(form.qualifMachines)}}
                                         </span>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class ="tab-pane fade show" id="add-machine" role="tabpanel" aria-labelledby="add-machine-tab">
+                            <div class ="tab-pane fade show" id="add-user" role="tabpanel" aria-labelledby="add-user-tab">
                                 <div class="row">
-                                    <div id="machineOpe" data-prototype="{{ form_widget(form.qualifOperations.vars.prototype)|e('html_attr') }}">
+                                    <div id="userPoste" data-prototype="{{ form_widget(form.qualifPostes.vars.prototype)|e('html_attr') }}">
                                         <div class="mb-4 align-items-center">
-                                            {{ form_label(form.qualifOperations)}}
+                                            {{ form_label(form.qualifPostes)}}
                                         </div>
                                         <span>
-                                            {{ form_widget(form.qualifOperations)}}
+                                            {{ form_widget(form.qualifPostes)}}
                                         </span>
                                     </div>
                                 </div>
@@ -143,78 +143,78 @@
 
 
 
-        <input type="text" id="searchInput" onkeyup="searchOperation()" placeholder="Rechercher une opération... (nom)">
+        <input type="text" id="searchInput" onkeyup="searchPoste()" placeholder="Rechercher un poste... (nom)">
         <div class="row">
             <div id="entityGrid">
-                {% for operation in operations %}
+                {% for poste in postes %}
                     <div class="grid-item">
-                        <span data-toggle="tooltip" title="{{operation.Content}}">
+                        <span data-toggle="tooltip" title="{{poste.name}}">
                             <div class="entity-content">
-                                {{ operation.Content }}
+                                {{ poste.name }}
                             </div>
                         </span>
                         <div class="entity-actions">
-                            <span data-toggle="tooltip" title="Lier à une gamme">
-                                <button type="button" class="btn btn-info me-2" data-toggle="modal" data-target="#editModal-{{ operation.id }}">
+                            <span data-toggle="tooltip" title="Modifier le poste">
+                                <button type="button" class="btn btn-info me-2" data-toggle="modal" data-target="#editModal-{{ poste.id }}">
                                     <i class="bi bi-link"></i>
                                 </button>
                             </span>
-                            <span data-toggle="tooltip" title="Supprimer l'opération">
-                                {{ include('operation/_delete_form.html.twig') }}
+                            <span data-toggle="tooltip" title="Supprimer le poste">
+                                {{ include('poste/_delete_form.html.twig') }}
                             </span>
                         </div>
                     </div>
 
 
-        <div class="modal fade" id="editModal-{{ operation.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel-{{ operation.id }}" aria-hidden="true">
+        <div class="modal fade" id="editModal-{{ poste.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel-{{ poste.id }}" aria-hidden="true">
             <div class="modal-dialog modal-mg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel-{{ operation.id }}">Modifier l'operation: {{operation.content}}.</h5>
+                        <h5 class="modal-title" id="editModalLabel-{{ poste.id }}">Modifier le poste : {{poste.name}}.</h5>
                     </div>
                     <div class="modal_nav">
-                        <ul class="nav nav-tabs" id="editTab-{{ operation.id }}" role="tablist">
+                        <ul class="nav nav-tabs" id="editTab-{{ poste.id }}" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="edit-content-tab-{{ operation.id }}" data-toggle="tab" href="#edit-content-{{ operation.id }}" role="tab" aria-controls="edit-content-{{ operation.id }}" aria-selected="true">Nom</a>
+                                <a class="nav-link active" id="edit-name-tab-{{ poste.id }}" data-toggle="tab" href="#edit-name-{{ poste.id }}" role="tab" aria-controls="edit-name-{{ poste.id }}" aria-selected="true">Nom</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="edit-gamme-tab-{{ operation.id }}" data-toggle="tab" href="#edit-gamme-{{ operation.id }}" role="tab" aria-controls="edit-gamme-{{ operation.id }}" aria-selected="false">Gammes</a>
+                                <a class="nav-link" id="edit-machine-tab-{{ poste.id }}" data-toggle="tab" href="#edit-machine-{{ poste.id }}" role="tab" aria-controls="edit-machine-{{ poste.id }}" aria-selected="false">Machines</a>
                             </li>
                             <li class="nav-item">
-                                <a class = "nav-link" id="edit-machine-tab-{{ operation.id }}" data-toggle="tab" href="#edit-machine-{{ operation.id }}" role="tab" aria-controls="edit-machine-{{ operation.id }}" aria-selected="false">Machines</a>
+                                <a class = "nav-link" id="edit-user-tab-{{ poste.id }}" data-toggle="tab" href="#edit-user-{{ poste.id }}" role="tab" aria-controls="edit-user-{{ poste.id }}" aria-selected="false">Ouvriers</a>
                             </li>
                         </ul>
                     </div>   
-                    {{ form_start(forms[operation.id], {'action': path('app_operation_edit',  {'id': operation.id})})}}
+                    {{ form_start(forms[poste.id], {'action': path('app_poste_edit',  {'id': poste.id})})}}
                     <div class="modal-body">
-                        <div class = "tab-content" id="editOpeContent-{{ operation.id }}">
-                            <div class ="tab-pane fade show active" id="edit-content-{{ operation.id }}" role="tabpanel" aria-labelledby="edit-content-tab-{{ operation.id }}">
+                        <div class = "tab-content" id="editPoste-{{ poste.id }}">
+                            <div class ="tab-pane fade show active" id="edit-name-{{ poste.id }}" role="tabpanel" aria-labelledby="edit-name-tab-{{ poste.id }}">
                                 <div class="row">
-                                    {{ form_label(forms[operation.id].content)}}
-                                    {{ form_widget(forms[operation.id].content)}}
+                                    {{ form_label(forms[poste.id].name)}}
+                                    {{ form_widget(forms[poste.id].name)}}
                                 </div>
                             </div>
-                            <div class ="tab-pane fade show" id="edit-gamme-{{ operation.id }}" role="tabpanel" aria-labelledby="edit-gamme-tab-{{ operation.id }}">
+                            <div class ="tab-pane fade show" id="edit-machine-{{ poste.id }}" role="tabpanel" aria-labelledby="edit-machine-tab-{{ poste.id }}">
                                 <div class="row">
-                                    <div id="editGammeOpe-{{ operation.id }}" data-prototype="{{ form_widget(forms[operation.id].compoGamme.vars.prototype)|e('html_attr') }}">
+                                    <div id="editMachinePoste-{{ poste.id }}" data-prototype="{{ form_widget(forms[poste.id].qualifMachines.vars.prototype)|e('html_attr') }}">
                                         <div class="mb-4 align-items-center">
-                                            {{ form_label(forms[operation.id].compoGamme)}}
+                                            {{ form_label(forms[poste.id].qualifMachines)}}
                                         </div>
                                         <span>
-                                            {{ form_widget(forms[operation.id].compoGamme)}}
+                                            {{ form_widget(forms[poste.id].qualifMachines)}}
                                         </span>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class ="tab-pane fade show" id="edit-machine-{{ operation.id }}" role="tabpanel" aria-labelledby="add-machine-tab">
+                            <div class ="tab-pane fade show" id="edit-user-{{ poste.id }}" role="tabpanel" aria-labelledby="edit-user-tab-{{ poste.id }}">
                                 <div class="row">
-                                    <div id="editMachineOpe-{{ operation.id }}" data-prototype="{{ form_widget(forms[operation.id].qualifOperations.vars.prototype)|e('html_attr') }}">
+                                    <div id="editUserPoste-{{ poste.id }}" data-prototype="{{ form_widget(forms[poste.id].qualifPostes.vars.prototype)|e('html_attr') }}">
                                         <div class="mb-4 align-items-center">
-                                            {{ form_label(forms[operation.id].qualifOperations)}}
+                                            {{ form_label(forms[poste.id].qualifPostes)}}
                                         </div>
                                         <span>
-                                            {{ form_widget(forms[operation.id].qualifOperations)}}
+                                            {{ form_widget(forms[poste.id].qualifPostes)}}
                                         </span>
                                     </div>
                                 </div>
@@ -225,7 +225,7 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
                         <button type="submit" class="btn btn-primary">Valider</button>
                     </div>
-                    {{ form_end(forms[operation.id])}}
+                    {{ form_end(forms[poste.id])}}
                 </div>
             </div>
         </div>
@@ -238,8 +238,8 @@
     </div>
 
 <script>
-    function searchOperation() {
-        var input, filter, grid, items, content, i, txtValue;
+    function searchPoste() {
+        var input, filter, grid, items, name, i, txtValue;
         input = document.getElementById("searchInput");
         filter = input.value.toUpperCase();
         grid = document.getElementById("entityGrid");
@@ -247,9 +247,9 @@
         
 
         for (i = 0; i < items.length; i++) {
-            content = items[i].getElementsByClassName("entity-content")[0];
-            if (content) {
-                txtValue = content.textContent || content.innerText;
+            name = items[i].getElementsByClassName("entity-content")[0];
+            if (name) {
+                txtValue = name.textContent || name.innerText;
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
                     items[i].style.display = "";
                     // Réappliquer l'animation
@@ -273,23 +273,23 @@
 
     $(document).ready(function() {
         $('[id^="myTab-"]').each(function() {
-            var operationId = $(this).attr('id').split('-')[1];
-            $('#myTab-' + operationId + ' a').on('click', function (e) {
+            var posteId = $(this).attr('id').split('-')[1];
+            $('#myTab-' + posteId + ' a').on('click', function (e) {
                 e.preventDefault();
                 $(this).tab('show');
             });
         });
     });
 document.addEventListener("DOMContentLoaded", function () {
-    let operationIds = document.querySelectorAll("[id^='editOpeContent-']");
-    operationIds.forEach(function (element) {
-        let operationId = element.id.replace('editOpeContent-', '');
-        setupCollection('editGammeOpe-' + operationId, 'operation_compoGamme_');
-        setupCollection('editMachineOpe-' + operationId, 'operation_qualifOperations_');
+    let posteIds = document.querySelectorAll("[id^='editPoste-']");
+    posteIds.forEach(function (element) {
+        let posteId = element.id.replace('editPoste-', '');
+        setupCollection('editMachinePoste-' + posteId, 'poste_qualifMachines_');
+        setupCollection('editUserPoste-' + posteId, 'poste_qualifPostes_');
     });
 
-    setupCollection('gammeOpe', 'operation_compoGamme_');
-    setupCollection('machineOpe', 'operation_qualifOperations_');
+    setupCollection('machinePoste', 'poste_qualifMachines_');
+    setupCollection('userPoste', 'poste_qualifPostes_');
 });
 
 function setupCollection(collectionId, formPrefix) {

@@ -59,3 +59,70 @@ tr:nth-child(odd) {
     box-shadow: 0 0 0px Black; /* Ombre pour l'effet focus */
     outline: none; /* Supprimer l'effet de focus par défaut */
 }
+
+#entityGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    justify-content: start; /* Aligne les éléments au début de la grille */
+}
+
+.grid-item {
+    background-color: #f8f9fa;
+    padding: 16px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    width: 200px;  /* Largeur fixe */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box; /* Inclure la bordure et le padding dans la taille totale */
+}
+
+.entity-content {
+    margin-bottom: 8px;
+    flex-grow: 1; /* S'étire pour remplir l'espace disponible */
+    overflow: hidden; /* Cache le débordement */
+    white-space: nowrap; /* Empêche les retours à la ligne */
+    text-overflow: ellipsis; /* Ajoute des ellipses pour le contenu trop long */
+    position: relative; /* Pour le tooltip */
+}
+
+.entity-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.entity-actions .btn {
+    flex: 1; /* Chaque bouton prend une part égale de l'espace disponible */
+    padding: 4px 8px; /* Ajuste le padding pour des boutons plus petits */
+    font-size: 0.875rem; /* Taille de police plus petite pour les boutons */
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px); /* Début de l'animation en bas */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Fin de l'animation à la position d'origine */
+    }
+}
+
+.fade-in-up {
+    opacity: 0; /* Initialement transparent */
+    transform: translateY(20px); /* Initialement décalé vers le bas */
+    animation: fadeInUp 0.5s forwards; /* Animation de fade-in et de montée */
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+}
+.flex-item-35 {
+    flex: 0 0 35%;
+}
+.flex-item-60 {
+    flex: 0 0 60%;
+}

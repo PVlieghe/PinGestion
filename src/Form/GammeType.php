@@ -23,7 +23,7 @@ class GammeType extends AbstractType
             ->add('compoGammes', CollectionType::class, [
                 'entry_type' => CompoGammeType::class, // Type de champ pour chaque élément de la collection
                 'entry_options' => [
-                    'label' => false, // Entité associée à la collection d'étapes
+                    'label' => false, 
                 ],
                 'label' => '<i class="bi bi-pencil"></i> Opérations ', // Ajoutez l'icône au label
                 'label_html' => true, // Indique que le label contient du HTML
