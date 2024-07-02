@@ -24,11 +24,6 @@ class Operation
     #[ORM\OneToMany(targetEntity: CompoGamme::class, mappedBy: 'operation', orphanRemoval: true, cascade:['persist', 'remove'])]
     private Collection $compoGamme;
 
-    /**
-     * @var Collection<int, UtilisationPiece>
-     */
-    #[ORM\OneToMany(targetEntity: UtilisationPiece::class, mappedBy: 'operation', orphanRemoval: true)]
-    private Collection $utilisationPieces;
 
     /**
      * @var Collection<int, QualifOperation>
@@ -39,7 +34,6 @@ class Operation
     public function __construct()
     {
         $this->compoGamme = new ArrayCollection();
-        $this->utilisationPieces = new ArrayCollection();
         $this->qualifOperations = new ArrayCollection();
     }
 
@@ -90,35 +84,6 @@ class Operation
         return $this;
     }
 
-    /**
-     * @return Collection<int, UtilisationPiece>
-     */
-    public function getUtilisationPieces(): Collection
-    {
-        return $this->utilisationPieces;
-    }
-
-    public function addUtilisationPiece(UtilisationPiece $utilisationPiece): static
-    {
-        if (!$this->utilisationPieces->contains($utilisationPiece)) {
-            $this->utilisationPieces->add($utilisationPiece);
-            $utilisationPiece->setOperation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUtilisationPiece(UtilisationPiece $utilisationPiece): static
-    {
-        if ($this->utilisationPieces->removeElement($utilisationPiece)) {
-            // set the owning side to null (unless already changed)
-            if ($utilisationPiece->getOperation() === $this) {
-                $utilisationPiece->setOperation(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, QualifOperation>

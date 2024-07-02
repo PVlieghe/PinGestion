@@ -27,10 +27,10 @@ class Piece
     #[ORM\Column(nullable: true)]
     private ?float $prix_achat = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?bool $intermediaire = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?bool $fabrique = null;
 
     #[ORM\Column]
@@ -39,15 +39,17 @@ class Piece
     #[ORM\OneToOne(mappedBy: 'piece', cascade: ['persist', 'remove'])]
     private ?Gamme $gamme = null;
 
+
     /**
-     * @var Collection<int, UtilisationPiece>
+     * @var Collection<int, Composition>
      */
-    #[ORM\OneToMany(targetEntity: UtilisationPiece::class, mappedBy: 'piece', orphanRemoval: true)]
-    private Collection $utilisationPieces;
+    #[ORM\OneToMany(targetEntity: Composition::class, mappedBy: 'pieceFabrique',  orphanRemoval: true, cascade: ['persist', 'remove'])]
+    private Collection $compositions;
 
     public function __construct()
     {
-        $this->utilisationPieces = new ArrayCollection();
+
+        $this->compositions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -156,30 +158,31 @@ class Piece
         return $this;
     }
 
+
     /**
-     * @return Collection<int, UtilisationPiece>
+     * @return Collection<int, Composition>
      */
-    public function getUtilisationPieces(): Collection
+    public function getCompositions(): Collection
     {
-        return $this->utilisationPieces;
+        return $this->compositions;
     }
 
-    public function addUtilisationPiece(UtilisationPiece $utilisationPiece): static
+    public function addComposition(Composition $composition): static
     {
-        if (!$this->utilisationPieces->contains($utilisationPiece)) {
-            $this->utilisationPieces->add($utilisationPiece);
-            $utilisationPiece->setPiece($this);
+        if (!$this->compositions->contains($composition)) {
+            $this->compositions->add($composition);
+            $composition->setPieceFabrique($this);
         }
 
         return $this;
     }
 
-    public function removeUtilisationPiece(UtilisationPiece $utilisationPiece): static
+    public function removeComposition(Composition $composition): static
     {
-        if ($this->utilisationPieces->removeElement($utilisationPiece)) {
+        if ($this->compositions->removeElement($composition)) {
             // set the owning side to null (unless already changed)
-            if ($utilisationPiece->getPiece() === $this) {
-                $utilisationPiece->setPiece(null);
+            if ($composition->getPieceFabrique() === $this) {
+                $composition->setPieceFabrique(null);
             }
         }
 

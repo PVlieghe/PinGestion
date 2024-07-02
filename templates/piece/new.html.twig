@@ -1,11 +1,70 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}New Piece{% endblock %}
-
-{% block body %}
-    <h1>Create new Piece</h1>
-
-    {{ include('piece/_form.html.twig') }}
-
-    <a href="{{ path('app_piece_index') }}">back to list</a>
-{% endblock %}
+  <!-- Modal ajout -->
+        <div class="modal fade" id="ajoutModal" tabindex="-1" role="dialog" aria-labelledby="ajoutModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-mg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ajoutModalLabel">Ajout d'une pièce.</h5>
+                    </div>
+                    <div class="modal_nav">
+                        <ul class="nav nav-tabs" id="addTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="add-info-tab" data-toggle="tab" href="#add-info" role="tab" aria-controls="add-info" aria-selected="true">Infos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="add-compo-tab" data-toggle="tab" href="#add-compo" role="tab" aria-controls="add-compo" aria-selected="false">Compositions</a>
+                            </li>
+                        </ul>
+                    </div>   
+                    {{ form_start(form, {'action': path('app_piece_new')})}}
+                    <div class="modal-body">
+                        <div class = "tab-content" id="addPieceInfo">
+                            <div class ="tab-pane fade show active" id="add-info" role="tabpanel" aria-labelledby="add-info-tab">
+                                <div class="row">
+                                    {{ form_row(form.name)}}
+                                </div>
+                                <div class="row mt-3">
+                                    {{ form_row(form.libelle)}}
+                                </div>
+                                <div class="row mt-3">
+                                    {{ form_row(form.intermediaire) }}
+                                </div>
+                                <div class="row mt-3">
+                                    {{ form_row(form.prix_achat) }}
+                                </div>
+                                <div class="row mt-3">
+                                    {{ form_row(form.prix_vente) }}
+                                </div>
+                                <div class="row mt-3">
+                                    {{ form_row(form.stock) }}
+                                </div>
+                            </div>
+                            <div class="tab-pane fade show" id="add-compo" role="tabpanel" aria-labelledby="add-compo-tab">
+                                <div class="row">
+                                    {{ form_row(form.fabrique, { 'attr': { 'class': 'fabrique-checkbox', 'data-target': 'additional-fields' } }) }}
+                                </div>
+                                <div id="additional-fields" class="d-none">
+                                    <div class="row mt-3">
+                                        {{ form_row(form.gamme) }}
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div id="pieceComposition" data-prototype="{{ form_widget(form.compositions.vars.prototype)|e('html_attr') }}">
+                                            <div class="mb-4 align-items-center">
+                                                {{ form_label(form.compositions) }}
+                                            </div>
+                                            <span>
+                                                {{ form_widget(form.compositions) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
+                        <button type="submit" class="btn btn-primary">Valider</button>
+                    </div>
+                    {{ form_end(form)}}
+                </div>
+            </div>
+        </div>

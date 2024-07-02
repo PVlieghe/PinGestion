@@ -1,13 +1,69 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Edit Piece{% endblock %}
-
-{% block body %}
-    <h1>Edit Piece</h1>
-
-    {{ include('piece/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_piece_index') }}">back to list</a>
-
-    {{ include('piece/_delete_form.html.twig') }}
-{% endblock %}
+        <div class="modal fade" id="editModal-{{ piece.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel-{{ piece.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-mg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel-{{ piece.id }}">Modifier la pièce : {{piece.name}}.</h5>
+                    </div>
+                    <div class="modal_nav">
+                        <ul class="nav nav-tabs" id="editTab-{{ piece.id }}" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="edit-info-tab-{{ piece.id }}" data-toggle="tab" href="#edit-info-{{ piece.id }}" role="tab" aria-controls="edit-info-{{ piece.id }}" aria-selected="true">Infos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="edit-compo-tab-{{ piece.id }}" data-toggle="tab" href="#edit-compo-{{ piece.id }}" role="tab" aria-controls="edit-compo-{{ piece.id }}" aria-selected="false">Compositions</a>
+                            </li>
+                        </ul>
+                    </div>   
+                    {{ form_start(forms[piece.id], {'action': path('app_piece_edit',  {'id': piece.id})})}}
+                    <div class="modal-body">
+                        <div class = "tab-content" id="editPiece-{{ piece.id }}">
+                            <div class ="tab-pane fade show active" id="edit-info-{{ piece.id }}" role="tabpanel" aria-labelledby="edit-info-tab-{{ piece.id }}">
+                                <div class="row">
+                                    {{ form_row(forms[piece.id].name)}}
+                                </div>
+                                <div class="row mt-3">
+                                    {{ form_row(forms[piece.id].libelle)}}
+                                </div>
+                                <div class="row mt-3">
+                                    {{ form_row(forms[piece.id].intermediaire, { 'attr': {'checked': piece.intermediaire ? 'checked' : false }}) }}
+                                </div>
+                                <div class="row mt-3">
+                                    {{ form_row(forms[piece.id].prix_achat) }}
+                                </div>
+                                <div class="row mt-3">
+                                    {{ form_row(forms[piece.id].prix_vente) }}
+                                </div>
+                                <div class="row mt-3">
+                                    {{ form_row(forms[piece.id].stock) }}
+                                </div>  
+                            </div>
+                            <div class="tab-pane fade show" id="edit-compo-{{ piece.id }}" role="tabpanel" aria-labelledby="edit-compo-tab-{{ piece.id }}">
+                                <div class="row">
+                                    {{ form_row(forms[piece.id].fabrique, { 'attr': { 'class': 'fabrique-checkbox', 'data-target': 'edit-fields-' ~ piece.id, 'checked': piece.fabrique ? 'checked' : false  } }) }}
+                                </div>
+                                <div id="edit-fields-{{ piece.id }}" class="d-none">
+                                    <div class="row mt-3">
+                                        {{ form_row(forms[piece.id].gamme) }}
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div id="editCompositionPiece-{{ piece.id }}" data-prototype="{{ form_widget(forms[piece.id].compositions.vars.prototype)|e('html_attr') }}">
+                                            <div class="mb-4 align-items-center">
+                                                {{ form_label(forms[piece.id].compositions) }}
+                                            </div>
+                                            <span>
+                                                {{ form_widget(forms[piece.id].compositions) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
+                        <button type="submit" class="btn btn-primary">Valider</button>
+                    </div>
+                    {{ form_end(forms[piece.id])}}
+                </div>
+            </div>
+        </div>

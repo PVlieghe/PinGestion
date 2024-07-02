@@ -1,7 +1,6 @@
-
 {% extends 'base.html.twig' %}
 
-{% block title %}Piece index{% endblock %}
+{% block title %}Liste des pièces{% endblock %}
 
 {% block body %}
 <div class="body">
@@ -60,12 +59,14 @@
 
 <body>
     <div class="container">
-       <div class="row mb-3">
+        <div class="row mb-3">
             <h2 class="col mb-0">Liste des pièces</h2>
             <div  class="col" style="display:contents">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-              <i class="bi bi-person-plus"></i>  ajouter 
-            </button>
+                <span data-toggle="tooltip" title="Créer une pièce">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajoutModal">
+                        <i class="bi bi-plus"></i>  Ajouter 
+                    </button>
+                </span>
             </div>
         </div>
         {% if success %}
@@ -75,106 +76,244 @@
                 </div>
             </div>
         {% endif %}
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-mg" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ajout d'une pièce.</h5>
+      
+        {% include 'piece/new.html.twig' with {'form': form} %}
 
-            </div>
-            <div class="modal-body">
-                {{ form_start(form, {'action': path('app_piece_new')})}}
-                <div class="row">
-                    {{ form_row(form.name)}}
-                </div>
-                <div class="row mt-3">
-                    {{ form_row(form.libelle)}}
-                </div>
-                <div class="row mt-3">
-                     {{ form_row(form.prix_vente) }}
-                </div>
-                 <div class="row mt-3">
-                     {{ form_row(form.prix_achat) }}
-                </div>
-                 <div class="row mt-3">
-                     {{ form_row(form.intermediaire) }}
-                </div>
-                 <div class="row mt-3">
-                     {{ form_row(form.fabrique) }}
-                </div>   
-                <div class="row mt-3">
-                     {{ form_row(form.stock) }}
-                </div>     
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
-                <button type="submit" class="btn btn-primary">Valider</button>
-            </div>{{ form_end(form)}}
-            </div>
-        </div>
-        </div>
-        <input type="text" id="searchInput" onkeyup="searchPieces()" placeholder="Rechercher une pièce... (nom)">
+        
+        <input type="text" id="searchInput" onkeyup="searchPiece()" placeholder="Rechercher une pièce... (nom ou libelle)">
         <div class="row">
-            <table id="piecesTable">
-                <thead>
-                    <tr>
-                <th>Nom</th>
-                <th>Libelle</th>
-                <th>Prix de vente</th>
-                <th>Prix d'achat</th>
-                <th>Intermediaire</th>
-                <th>Fabriquable</th>
-                <th>Stock</th>
-                <th>actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for piece in pieces %}
-                    <tr>
-                        <td>{{ piece.name }}</td>
-                        <td>{{ piece.libelle }}</td>
-                        <td>{{ piece.prixVente }}</td>
-                        <td>{{ piece.prixAchat }}</td>
-                        <td>{{ piece.intermediaire ? 'Oui' : 'Non' }}</td>
-                        <td>{{ piece.fabrique ? 'Oui' : 'Non' }}</td>
-                        <td>{{ piece.stock }}</td>
-                        <td>
-                            <a href="{{ path('app_piece_show', {'id': piece.id}) }}">show</a>
-                            <a href="{{ path('app_piece_edit', {'id': piece.id}) }}">edit</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div id="entityGrid">
+                {% for piece in pieces %}
+                    <div class="grid-item">
+                        <span data-toggle="tooltip" title="{{piece.name}}">
+                            <div class="entity-content">
+                                {{ piece.name }}
+                            </div>
+                        </span>
+                        <span data-toggle="tooltip" title="{{piece.libelle}}">
+                            <div class="entity-content">
+                                {{ piece.libelle }}
+                            </div>
+                        </span>
+                        <div class="entity-actions">
+                            <span data-toggle="tooltip" title="Voir la pièce">
+                                <button type="button" class="btn btn-dark me-2" data-toggle="modal" data-target="#showModal-{{ piece.id }}">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </span>
+                            <span data-toggle="tooltip" title="Modifier la piece">
+                                <button type="button" class="btn btn-info me-2" data-toggle="modal" data-target="#editModal-{{ piece.id }}">
+                                    <i class="bi bi-link"></i>
+                                </button>
+                            </span>
+                            <span data-toggle="tooltip" title="Supprimer la pièce">
+                                {{ include('piece/_delete_form.html.twig') }}
+                            </span>
+                        </div>
+                    </div>
+
+
+                 {% include 'piece/edit.html.twig' with {'piece': piece, 'forms': forms} %}
+        
+
+                {% endfor %}
+            </div>
+            
         </div>
     </div>
 
-    <script>
-        function searchPieces() {
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("searchInput");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("piecesTable");
-            tr = table.getElementsByTagName("tr");
+<script>
+    function searchPiece() {
+        var input, filter, grid, items, name, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        grid = document.getElementById("entityGrid");
+        items = grid.getElementsByClassName("grid-item");
+        
 
-            
-            var nameColumnIndex = 0;
-
-            for (i = 1; i < tr.length; i++) {
-                tr[i].style.display = "none";
-                td = tr[i].getElementsByTagName("td");
-                if (td[nameColumnIndex]) {
-                    txtValue = td[nameColumnIndex].textContent || td[nameColumnIndex].innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    }
+        for (i = 0; i < items.length; i++) {
+            name = items[i].getElementsByClassName("entity-content")[0];
+            if (name) {
+                txtValue = name.textContent || name.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    items[i].style.display = "";
+                    // Réappliquer l'animation
+                    items[i].classList.remove("fade-in-up");
+                    void items[i].offsetWidth; // Force le reflow
+                    items[i].classList.add("fade-in-up");
+                } else {
+                    items[i].style.display = "none";
                 }
             }
         }
+    }
 
-    </script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Appliquer l'animation initiale
+        const items = document.querySelectorAll('.grid-item');
+        items.forEach(item => {
+            item.classList.add('fade-in-up');
+        });
+    });
+
+    $(document).ready(function() {
+        $('[id^="myTab-"]').each(function() {
+            var machineId = $(this).attr('id').split('-')[1];
+            $('#myTab-' + machineId + ' a').on('click', function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+        });
+    });
+document.addEventListener("DOMContentLoaded", function () {
+    let pieceIds = document.querySelectorAll("[id^='editPiece-']");
+    pieceIds.forEach(function (element) {
+        let pieceId = element.id.replace('editPiece-', '');
+        setupCollection('editCompositionPiece-' + pieceId, 'piece_compositions_');
+    });
+
+    setupCollection('pieceComposition', 'piece_compositions_');
+});
+
+function setupCollection(collectionId, formPrefix) {
+    let collection = document.querySelector(`#${collectionId}`);
+    if (!collection) return; // Exit if the collection does not exist
+
+    let collectionSpan = collection.querySelector("span");
+
+    let addButton = document.createElement("button");
+    addButton.className = "btn custom-btn-outline-success rounded mt-2";
+    addButton.type = "button";
+    addButton.innerHTML = '<i class="bi bi-plus-circle-fill icon-size"></i>';
+    collection.appendChild(addButton); // Append the add button to the collection
+
+    // Initialize the index to the number of existing elements
+    let existingElements = collection.querySelectorAll(`div[id^='${formPrefix}']`);
+    collection.dataset.index = existingElements.length;
+
+    updateDeleteButtons(collection, formPrefix);
+
+    addButton.addEventListener("click", function () {
+        addNewForm(collection, collectionSpan, collectionId, formPrefix);
+    });
+}
+
+function updateDeleteButtons(collection, formPrefix) {
+    let collectionDivs = collection.querySelectorAll(`div[id^='${formPrefix}']`);
+    collectionDivs.forEach(function (div, index) {
+        if (!div.querySelector('.btn.custom-btn-outline-danger')) {
+            addDeleteButton(div, index, formPrefix);
+        }
+    });
+}
+
+function addDeleteButton(div, index, formPrefix) {
+    let divSuppr = document.createElement("div");
+    divSuppr.className = "col-1 centered";
+
+    let deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.id = `delete-${formPrefix}-${index}`;
+    deleteButton.className = "btn custom-btn-outline-danger bouton-suppr-form";
+    deleteButton.innerHTML = '<i class="bi bi-trash icon-size"></i>';
+
+    divSuppr.appendChild(deleteButton);
+    div.appendChild(divSuppr);
+
+    deleteButton.addEventListener("click", function () {
+        div.remove();
+        // Update index and IDs of remaining elements
+        updateCollectionIndices(collection, formPrefix);
+    });
+}
+
+function addNewForm(collection, collectionSpan, collectionId, formPrefix) {
+    let prototype = collection.dataset.prototype;
+    let index = collection.dataset.index;
+    let newFormHtml = prototype.replace(/__name__/g, index);
+
+    let tempDiv = document.createElement('div');
+    tempDiv.innerHTML = newFormHtml;
+    let newForm = tempDiv.firstElementChild;
+
+    newForm.classList.add("row");
+    newForm.id = `${formPrefix}${index}`;
+    addDeleteButton(newForm, index, formPrefix);
+
+    collectionSpan.appendChild(newForm); // Append the new form to the collection span
+    collection.dataset.index++;
+}
+
+function updateCollectionIndices(collection, formPrefix) {
+    let collectionDivs = collection.querySelectorAll(`div[id^='${formPrefix}']`);
+    collectionDivs.forEach(function (div, index) {
+        div.id = `${formPrefix}${index}`;
+        let deleteButton = div.querySelector('.btn.custom-btn-outline-danger');
+        if (deleteButton) {
+            deleteButton.id = `delete-${formPrefix}-${index}`;
+        }
+    });
+    // Update the index to the new number of elements
+    collection.dataset.index = collectionDivs.length;
+}
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    function toggleAdditionalFields(event) {
+        const checkbox = event.target;
+        const targetId = checkbox.dataset.target;
+        console.log('Checkbox ID:', checkbox.id);
+        console.log('Target ID:', targetId);
+        
+        const additionalFields = document.getElementById(targetId);
+
+        if (additionalFields) {
+            if (checkbox.checked) {
+                additionalFields.classList.remove('d-none');
+            } else {
+                additionalFields.classList.add('d-none');
+            }
+        }
+    }
+
+    function initializeCheckboxes() {
+        const fabriqueCheckboxes = document.querySelectorAll('.fabrique-checkbox');
+        fabriqueCheckboxes.forEach(checkbox => {
+            console.log('Initializing checkbox:', checkbox.id);
+            toggleAdditionalFields({ target: checkbox });
+            checkbox.addEventListener('change', toggleAdditionalFields);
+        });
+    }
+
+    // Initial check on page load
+    initializeCheckboxes();
+
+    // Add event listener to tab changes to re-evaluate checkbox states
+    document.querySelectorAll('.nav-link').forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function () {
+            console.log('Tab shown:', tab.id);
+            initializeCheckboxes();
+        });
+    });
+
+    // Use MutationObserver to detect dynamic changes in the DOM
+    const observer = new MutationObserver(() => {
+        console.log('Mutation observed');
+        initializeCheckboxes();
+    });
+
+    const config = { childList: true, subtree: true };
+    observer.observe(document.body, config);
+});
+
+
+
+
+</script>
+
+
 </body>
 </html>
 </div> 
 {% endblock %}
+

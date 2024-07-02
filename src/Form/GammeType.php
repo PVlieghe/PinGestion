@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\User;
 use App\Entity\Gamme;
 use App\Entity\Piece;
+use App\Repository\GammeRepository;
+use App\Repository\PieceRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -36,10 +38,18 @@ class GammeType extends AbstractType
             ])
             ->add('piece', EntityType::class, [
                 'label_html' => true,
-                'label' => '<i class="bi bi-box"></i> (facultatif) Pièce associée :',
+                'label' => '<i class="bi bi-box"></i> (facultatif) Pièce(s) disponible(s) à associer à la gamme:',
                 'attr' => ['class' => 'form-control custom-form-control'],
+                'placeholder' => 'Aucune pièce sélectionnée',
                 'class' => Piece::class,
                 'choice_label' => 'name',
+                'query_builder' => function (PieceRepository $er) {
+                    return $er->createQueryBuilder('p')
+                        ->leftJoin('p.gamme', 'g')
+                        ->where('p.fabrique = :fabrique')
+                        ->andWhere('g.id IS NULL')
+                        ->setParameter('fabrique', true);
+                },
             ])
             ->add('referent', EntityType::class, [
                 'attr' => ['class' => 'form-control custom-form-control'],

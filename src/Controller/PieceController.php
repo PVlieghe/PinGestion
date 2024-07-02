@@ -18,13 +18,23 @@ class PieceController extends AbstractController
     public function index(PieceRepository $pieceRepository, Request $request): Response
     {
 
+        $forms = [];
+        $pieces = $pieceRepository -> findAll(); 
+
+        foreach($pieces as $piece) {
+            $formIndex = $this->createForm(PieceType::class, $piece);
+            $formIndex->handleRequest($request);
+            $forms[$piece->getId()] = $formIndex->createView();
+        }
+
         $newPiece = new Piece();
         $form = $this->createForm(PieceType::class, $newPiece);
         $form->handleRequest($request);
         return $this->render('piece/index.html.twig', [
-            'pieces' => $pieceRepository->findAll(),
+            'pieces' => $pieces,
+            'forms' => $forms,
             'form' => $form,
-            'success' => null,
+            'success' => $request->query->get('success'),
 
         ]);
     }
@@ -32,22 +42,32 @@ class PieceController extends AbstractController
     #[Route('/new', name: 'app_piece_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $success = null;
         $piece = new Piece();
         $form = $this->createForm(PieceType::class, $piece);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $compo = $form ->getData()->getCompositions();
+
+            if(!$form->getData()->isFabrique()){
+                $compo = [];
+                $form->getData()->getGamme() == null;
+            }
+            else{
+                foreach($compo as $c) {
+                    $c->setPieceInter($piece);
+                }
+            }
             $entityManager->persist($piece);
             $entityManager->flush();
-
+            $success =  "La pièce \"" .$piece -> getName()."\" a bien été ajoutée! ";
             return $this->redirectToRoute('app_piece_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('piece/index.html.twig', [
-            'piece' => $piece,
-            'form' => $form,
-            'success' =>'La pièce '. $piece->getName() .' a bien été ajoutée!'
 
+        return $this->redirectToRoute('app_piece_index', [
+            'success' => $success
         ]);
     }
 
