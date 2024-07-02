@@ -126,3 +126,22 @@ tr:nth-child(odd) {
 .flex-item-60 {
     flex: 0 0 60%;
 }
+
+.btn-no-pointer {
+    cursor: default;
+    pointer-events: none;
+}
+
+.vr {
+    border-left: 1px solid #000; /* Changez la couleur et l'épaisseur selon vos besoins */
+    height: 100%;
+}
+
+
+.orange-bg {        
+    background-color: #FFD580; /* Light orange background */
+}
+
+.warning-text {
+    color: #FFD580; /* Light orange text */
+}

@@ -1,0 +1,85 @@
+                    <div class="modal fade" id="editModal-{{ user.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel-{{ user.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-mg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel-{{ user.id }}">Modifier l'utilisateur : {{user.username}}.</h5>
+                                </div>
+                                <div class="modal_nav">
+                                    <ul class="nav nav-tabs" id="editTab-{{ user.id }}" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="edit-info-tab-{{ user.id }}" data-toggle="tab" href="#edit-info-{{ user.id }}" role="tab" aria-controls="edit-info-{{ user.id }}" aria-selected="true">Informations</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="edit-poste-tab-{{ user.id }}" data-toggle="tab" href="#edit-poste-{{ user.id }}" role="tab" aria-controls="edit-poste-{{ user.id }}" aria-selected="false">Postes</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class = "nav-link" id="edit-gamme-tab-{{ user.id }}" data-toggle="tab" href="#edit-gamme-{{ user.id }}" role="tab" aria-controls="edit-gamme-{{ user.id }}" aria-selected="false">Gammes</a>
+                                        </li>
+                                    </ul>
+                                </div>   
+                                {{ form_start(forms[user.id], {'action': path('app_admin_edit',  {'id': user.id})})}}
+                                <div class="modal-body">
+                                    <div class = "tab-content" id="editUser-{{ user.id }}">
+                                        <div class ="tab-pane fade show active" id="edit-info-{{ user.id }}" role="tabpanel" aria-labelledby="edit-info-tab-{{ user.id }}">
+                                            <div class="row">
+                                                {{ form_row(forms[user.id].email)}}
+                                            </div>
+                                            <div class="row mt-3">
+                                                {{ form_row(forms[user.id].username)}}
+                                            </div>
+                                            <div class="row mt-3 ">
+                                                <label>Rôle(s)</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-4 d-inline-flex">
+                                                    <div class="form-check form-check-inline">
+                                                        {{ form_row(forms[user.id].role_compta)}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="form-check form-check-inline ">
+                                                        {{ form_row(forms[user.id].role_atelier)}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="form-check form-check-inline ">
+                                                        {{ form_row(forms[user.id].role_admin)}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class ="tab-pane fade show" id="edit-poste-{{ user.id }}" role="tabpanel" aria-labelledby="edit-poste-tab-{{ user.id }}">
+                                            <div class="row">
+                                                <div id="editPosteUser-{{ user.id }}" data-prototype="{{ form_widget(forms[user.id].qualifPostes.vars.prototype)|e('html_attr') }}">
+                                                    <div class="mb-4 align-items-center">
+                                                        {{ form_label(forms[user.id].qualifPostes)}}
+                                                    </div>
+                                                    <span>
+                                                        {{ form_widget(forms[user.id].qualifPostes)}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class ="tab-pane fade show" id="edit-gamme-{{ user.id }}" role="tabpanel" aria-labelledby="edit-gamme-tab-{{ user.id }}">
+                                            <div class="row">
+                                                <div id="editGammeUser-{{ user.id }}" data-prototype="{{ form_widget(forms[user.id].gammes.vars.prototype)|e('html_attr') }}">
+                                                    <div class="mb-4 align-items-center">
+                                                        {{ form_label(forms[user.id].gammes)}}
+                                                    </div>
+                                                    <span>
+                                                        {{ form_widget(forms[user.id].gammes)}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
+                                    <button type="submit" class="btn btn-primary">Valider</button>
+                                </div>
+                                {{ form_end(forms[user.id])}}
+                            </div>
+                        </div>
+                    </div>

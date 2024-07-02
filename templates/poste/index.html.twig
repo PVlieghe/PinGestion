@@ -76,71 +76,8 @@
                 </div>
             </div>
         {% endif %}
-        <!-- Modal ajout -->
-        <div class="modal fade" id="ajoutModal" tabindex="-1" role="dialog" aria-labelledby="ajoutModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-mg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="ajoutModalLabel">Ajout d'un poste.</h5>
-                    </div>
-                    <div class="modal_nav">
-                        <ul class="nav nav-tabs" id="addTab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="add-name-tab" data-toggle="tab" href="#add-name" role="tab" aria-controls="add-name" aria-selected="true">Nom</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="add-machine-tab" data-toggle="tab" href="#add-machine" role="tab" aria-controls="add-machine" aria-selected="false">Machines</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class = "nav-link" id="add-user-tab" data-toggle="tab" href="#add-user" role="tab" aria-controls="add-user" aria-selected="false">Ouvriers</a>
-                            </li>
-                        </ul>
-                    </div>   
-                    {{ form_start(form, {'action': path('app_poste_new')})}}
-                    <div class="modal-body">
-                        <div class = "tab-content" id="addPosteName">
-                            <div class ="tab-pane fade show active" id="add-name" role="tabpanel" aria-labelledby="add-name-tab">
-                                <div class="row">
-                                    {{ form_label(form.name)}}
-                                    {{ form_widget(form.name)}}
-                                </div>
-                            </div>
-                            <div class ="tab-pane fade show" id="add-machine" role="tabpanel" aria-labelledby="add-machine-tab">
-                                <div class="row">
-                                    <div id="machinePoste" data-prototype="{{ form_widget(form.qualifMachines.vars.prototype)|e('html_attr') }}">
-                                        <div class="mb-4 align-items-center">
-                                            {{ form_label(form.qualifMachines)}}
-                                        </div>
-                                        <span>
-                                            {{ form_widget(form.qualifMachines)}}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class ="tab-pane fade show" id="add-user" role="tabpanel" aria-labelledby="add-user-tab">
-                                <div class="row">
-                                    <div id="userPoste" data-prototype="{{ form_widget(form.qualifPostes.vars.prototype)|e('html_attr') }}">
-                                        <div class="mb-4 align-items-center">
-                                            {{ form_label(form.qualifPostes)}}
-                                        </div>
-                                        <span>
-                                            {{ form_widget(form.qualifPostes)}}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
-                        <button type="submit" class="btn btn-primary">Valider</button>
-                    </div>
-                    {{ form_end(form)}}
-                </div>
-            </div>
-        </div>
 
+        {% include 'poste/new.html.twig' with {'form': form} %}
 
 
         <input type="text" id="searchInput" onkeyup="searchPoste()" placeholder="Rechercher un poste... (nom)">
@@ -164,76 +101,9 @@
                             </span>
                         </div>
                     </div>
-
-
-        <div class="modal fade" id="editModal-{{ poste.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel-{{ poste.id }}" aria-hidden="true">
-            <div class="modal-dialog modal-mg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel-{{ poste.id }}">Modifier le poste : {{poste.name}}.</h5>
-                    </div>
-                    <div class="modal_nav">
-                        <ul class="nav nav-tabs" id="editTab-{{ poste.id }}" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="edit-name-tab-{{ poste.id }}" data-toggle="tab" href="#edit-name-{{ poste.id }}" role="tab" aria-controls="edit-name-{{ poste.id }}" aria-selected="true">Nom</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="edit-machine-tab-{{ poste.id }}" data-toggle="tab" href="#edit-machine-{{ poste.id }}" role="tab" aria-controls="edit-machine-{{ poste.id }}" aria-selected="false">Machines</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class = "nav-link" id="edit-user-tab-{{ poste.id }}" data-toggle="tab" href="#edit-user-{{ poste.id }}" role="tab" aria-controls="edit-user-{{ poste.id }}" aria-selected="false">Ouvriers</a>
-                            </li>
-                        </ul>
-                    </div>   
-                    {{ form_start(forms[poste.id], {'action': path('app_poste_edit',  {'id': poste.id})})}}
-                    <div class="modal-body">
-                        <div class = "tab-content" id="editPoste-{{ poste.id }}">
-                            <div class ="tab-pane fade show active" id="edit-name-{{ poste.id }}" role="tabpanel" aria-labelledby="edit-name-tab-{{ poste.id }}">
-                                <div class="row">
-                                    {{ form_label(forms[poste.id].name)}}
-                                    {{ form_widget(forms[poste.id].name)}}
-                                </div>
-                            </div>
-                            <div class ="tab-pane fade show" id="edit-machine-{{ poste.id }}" role="tabpanel" aria-labelledby="edit-machine-tab-{{ poste.id }}">
-                                <div class="row">
-                                    <div id="editMachinePoste-{{ poste.id }}" data-prototype="{{ form_widget(forms[poste.id].qualifMachines.vars.prototype)|e('html_attr') }}">
-                                        <div class="mb-4 align-items-center">
-                                            {{ form_label(forms[poste.id].qualifMachines)}}
-                                        </div>
-                                        <span>
-                                            {{ form_widget(forms[poste.id].qualifMachines)}}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class ="tab-pane fade show" id="edit-user-{{ poste.id }}" role="tabpanel" aria-labelledby="edit-user-tab-{{ poste.id }}">
-                                <div class="row">
-                                    <div id="editUserPoste-{{ poste.id }}" data-prototype="{{ form_widget(forms[poste.id].qualifPostes.vars.prototype)|e('html_attr') }}">
-                                        <div class="mb-4 align-items-center">
-                                            {{ form_label(forms[poste.id].qualifPostes)}}
-                                        </div>
-                                        <span>
-                                            {{ form_widget(forms[poste.id].qualifPostes)}}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
-                        <button type="submit" class="btn btn-primary">Valider</button>
-                    </div>
-                    {{ form_end(forms[poste.id])}}
-                </div>
-            </div>
-        </div>
-        
-
+                    {% include 'poste/edit.html.twig' with {'poste': poste, 'forms': forms} %}
                 {% endfor %}
-            </div>
-            
+            </div> 
         </div>
     </div>
 
@@ -285,11 +155,9 @@ document.addEventListener("DOMContentLoaded", function () {
     posteIds.forEach(function (element) {
         let posteId = element.id.replace('editPoste-', '');
         setupCollection('editMachinePoste-' + posteId, 'poste_qualifMachines_');
-        setupCollection('editUserPoste-' + posteId, 'poste_qualifPostes_');
     });
 
     setupCollection('machinePoste', 'poste_qualifMachines_');
-    setupCollection('userPoste', 'poste_qualifPostes_');
 });
 
 function setupCollection(collectionId, formPrefix) {

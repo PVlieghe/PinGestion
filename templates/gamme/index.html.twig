@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gamme index{% endblock %}
+{% block title %}Liste des gammes{% endblock %}
 
 {% block body %}
 <div class="body">
@@ -59,12 +59,14 @@
 
 <body>
     <div class="container">
-       <div class="row mb-3">
+        <div class="row mb-3">
             <h2 class="col mb-0">Liste des gammes</h2>
             <div  class="col" style="display:contents">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-              <i class="bi bi-person-plus"></i>  ajouter 
-            </button>
+                <span data-toggle="tooltip" title="Créer une gamme">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajoutModal">
+                        <i class="bi bi-plus"></i>  Ajouter 
+                    </button>
+                </span>
             </div>
         </div>
         {% if success %}
@@ -74,182 +76,189 @@
                 </div>
             </div>
         {% endif %}
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-mg" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ajout d'une gamme.</h5>
+      
+        {% include 'gamme/new.html.twig' with {'form': form} %}
 
-            </div>
-            <div class="modal-body">
-                {{ form_start(form, {'action': path('app_gamme_new')})}}
-                <div class="row">
-                    {{ form_row(form.Name)}}
-                </div>
-                <div class="row mt-3">
-                    {{ form_row(form.referent)}}
-                </div>
-                <div class="row mt-3">
-                     {{ form_row(form.piece) }}
-                </div>
-                <div class="row mt-3">
-                    <div id="operations" data-prototype="{{ form_row(form.compoGammes.vars.prototype)|e('html_attr') }}">
-                        <center><div class="mb-4 align-items-center">{{ form_label(form.compoGammes)}}</div></center>
-                        <span>
-                            {{ form_widget(form.compoGammes)}}
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
-                <button type="submit" class="btn btn-primary">Valider</button>
-            </div>{{ form_end(form)}}
-            </div>
-        </div>
-        </div>
-        <input type="text" id="searchInput" onkeyup="searchGammes()" placeholder="Rechercher une gamme... (nom)">
+        
+        <input type="text" id="searchInput" onkeyup="searchGamme()" placeholder="Rechercher une gamme... (nom)">
         <div class="row">
-            <table id="gammeTable">
-                <thead>
-                    <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Référent</th>
-                <th>actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for gamme in gammes %}
-                    <tr>
-                        <td>{{ gamme.id }}</td>
-                        <td>{{ gamme.Name }}</td>
-                        <td>{{ gamme.referent.username }}</td>
-                        <td>
-                            <a href="{{ path('app_gamme_show', {'id': gamme.id}) }}">show</a>
-                            <a href="{{ path('app_gamme_edit', {'id': gamme.id}) }}">edit</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div id="entityGrid">
+                {% for gamme in gammes %}
+                    <div class="grid-item ">
+                        <span data-toggle="tooltip" title="{{ gamme.Name }}">
+                            <div class="entity-content">
+                                {% if not gamme.referent or not gamme.piece %}
+                                    <i class="bi bi-exclamation-circle text-danger"></i>
+                                {% endif %}
+                                {{ gamme.Name }}
+                            </div>
+                        </span>
+                        <div class="entity-actions">
+                            <span data-toggle="tooltip" title="Voir la gamme">
+                                <button type="button" class="btn btn-dark me-2" data-toggle="modal" data-target="#showModal-{{ gamme.id }}">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </span>
+                            <span data-toggle="tooltip" title="Modifier la gamme">
+                                <button type="button" class="btn btn-info me-2" data-toggle="modal" data-target="#editModal-{{ gamme.id }}">
+                                    <i class="bi bi-link"></i>
+                                </button>
+                            </span>
+                            <span data-toggle="tooltip" title="Supprimer la gamme">
+                                {{ include('gamme/_delete_form.html.twig') }}
+                            </span>
+                        </div>
+                    </div>
+
+                    {% include 'gamme/edit.html.twig' with {'gamme': gamme, 'forms': forms} %}
+                    {% include 'gamme/show.html.twig' with {'gamme': gamme} %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 
-    <script>
-
-
-let collection, boutonAjout, span;
-        window.onload = () => {
-            collection = document.querySelector("#operations");
-            span = collection.querySelector("span");
-
-            boutonAjout = document.createElement("button");
-            let plus = document.createElement("i");
-            boutonAjout.className="btn custom-btn-outline-success rounded mt-2";
-            plus.className="bi bi-plus-circle-fill icon-size"
-            boutonAjout.appendChild(plus);
-            span.appendChild(boutonAjout);
-            boutonAjout.type = "button";
-            let nouveauBouton = span.append(boutonAjout);
-
-                let divs = collection.querySelectorAll("div[id^='gamme_compoGammes_']");
-                divs.forEach(function(div, index) {
-                    let divSuppr = document.createElement("div");
-
-                    let rowDiv = div.parentNode;;
-                    rowDiv.className = "row";
-                    divSuppr.className = "col-1 centered";
-
-                    let boutonSuppr = document.createElement("button");
-                    boutonSuppr.type = "button";
-                    boutonSuppr.id = "delete-compo-" + index;
-                    boutonSuppr.className = "btn custom-btn-outline-danger bouton-suppr-form";
-                    
-                    let icon = document.createElement("i");
-                    icon.className = "bi bi-trash icon-size";
-                    
-                    boutonSuppr.appendChild(icon);
-                    divSuppr.appendChild(boutonSuppr);
-                    div.appendChild(divSuppr);
-
-                    // Ajoutez l'écouteur d'événements pour supprimer l'étape
-                    boutonSuppr.addEventListener("click", function(){
-                        div.remove();
-                    });
-                });
-
-            collection.dataset.index = collection.querySelectorAll("div[id^='gamme_compoGammes_']").length;
-
-            boutonAjout.addEventListener("click", function(){
-                addButton(collection, nouveauBouton);
-            });
-        }
-
-        function addButton(collection, nouveauBouton){
-            let prototype = collection.dataset.prototype;
-
-            let index = collection.dataset.index;
-
-            prototype = prototype.replace(/__name__/g, index);
-
-            let content = document.createElement("html");
-            content.innerHTML = prototype;
-            let newForm = content.querySelector("div");
-        
-            newForm.classList.add("row");
-            let divSuppr = document.createElement("div");
-            
-            
-            let boutonSuppr = document.createElement("button");
-            boutonSuppr.type = "button";
-            boutonSuppr.id = "delete-compo-" + index;
-            boutonSuppr.className = "btn custom-btn-outline-danger bouton-suppr-form ";
-            let icon = document.createElement("i");
-            icon.className = "bi bi-trash icon-size";
-            
-            divSuppr.appendChild(boutonSuppr);
-            
+<script>
+    function searchGamme() {
+        var input, filter, grid, items, name, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        grid = document.getElementById("entityGrid");
+        items = grid.getElementsByClassName("grid-item");
         
 
-            
-
-            span.insertBefore(newForm, boutonAjout);
-            let targetDiv = document.getElementById("gamme_compoGammes_" + index);
-            targetDiv.appendChild(divSuppr);
-            boutonSuppr.appendChild(icon);
-            collection.dataset.index++
-            
-            boutonSuppr.addEventListener("click", function(){
-                this.closest('.row').remove();
-            })
-
-        }
-
-        function searchGammes() {
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("searchInput");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("gammesTable");
-            tr = table.getElementsByTagName("tr");
-
-            
-            var nameColumnIndex = 1;
-
-            for (i = 1; i < tr.length; i++) {
-                tr[i].style.display = "none";
-                td = tr[i].getElementsByTagName("td");
-                if (td[nameColumnIndex]) {
-                    txtValue = td[nameColumnIndex].textContent || td[nameColumnIndex].innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    }
+        for (i = 0; i < items.length; i++) {
+            name = items[i].getElementsByClassName("entity-content")[0];
+            if (name) {
+                txtValue = name.textContent || name.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    items[i].style.display = "";
+                    // Réappliquer l'animation
+                    items[i].classList.remove("fade-in-up");
+                    void items[i].offsetWidth; // Force le reflow
+                    items[i].classList.add("fade-in-up");
+                } else {
+                    items[i].style.display = "none";
                 }
             }
         }
+    }
 
-    </script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Appliquer l'animation initiale
+        const items = document.querySelectorAll('.grid-item');
+        items.forEach(item => {
+            item.classList.add('fade-in-up');
+        });
+    });
+
+    $(document).ready(function() {
+        $('[id^="myTab-"]').each(function() {
+            var gammeId = $(this).attr('id').split('-')[1];
+            $('#myTab-' + gammeId + ' a').on('click', function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+        });
+    });
+document.addEventListener("DOMContentLoaded", function () {
+    let gammeIds = document.querySelectorAll("[id^='editGamme-']");
+    gammeIds.forEach(function (element) {
+        let gammeId = element.id.replace('editGamme-', '');
+        setupCollection('editCompoGamme-' + gammeId, 'gamme_compoGammes_');
+
+    });
+    setupCollection('compoGamme', 'gamme_compoGammes_');
+});
+
+function setupCollection(collectionId, formPrefix) {
+    let collection = document.querySelector(`#${collectionId}`);
+    if (!collection) return; // Exit if the collection does not exist
+
+    let collectionSpan = collection.querySelector("span");
+
+    let addButton = document.createElement("button");
+    addButton.className = "btn custom-btn-outline-success rounded mt-2";
+    addButton.type = "button";
+    addButton.innerHTML = '<i class="bi bi-plus-circle-fill icon-size"></i>';
+    collection.appendChild(addButton); // Append the add button to the collection
+
+    // Initialize the index to the number of existing elements
+    let existingElements = collection.querySelectorAll(`div[id^='${formPrefix}']`);
+    collection.dataset.index = existingElements.length;
+
+    updateDeleteButtons(collection, formPrefix);
+
+    addButton.addEventListener("click", function () {
+        addNewForm(collection, collectionSpan, collectionId, formPrefix);
+    });
+}
+
+function updateDeleteButtons(collection, formPrefix) {
+    let collectionDivs = collection.querySelectorAll(`div[id^='${formPrefix}']`);
+    collectionDivs.forEach(function (div, index) {
+        if (!div.querySelector('.btn.custom-btn-outline-danger')) {
+            addDeleteButton(div, index, formPrefix);
+        }
+    });
+}
+
+function addDeleteButton(div, index, formPrefix) {
+    let divSuppr = document.createElement("div");
+    divSuppr.className = "col-1 centered";
+
+    let deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.id = `delete-${formPrefix}-${index}`;
+    deleteButton.className = "btn custom-btn-outline-danger bouton-suppr-form";
+    deleteButton.innerHTML = '<i class="bi bi-trash icon-size"></i>';
+
+    divSuppr.appendChild(deleteButton);
+    div.appendChild(divSuppr);
+
+    deleteButton.addEventListener("click", function () {
+        div.remove();
+        // Update index and IDs of remaining elements
+        updateCollectionIndices(collection, formPrefix);
+    });
+}
+
+function addNewForm(collection, collectionSpan, collectionId, formPrefix) {
+    let prototype = collection.dataset.prototype;
+    let index = collection.dataset.index;
+    let newFormHtml = prototype.replace(/__name__/g, index);
+
+    let tempDiv = document.createElement('div');
+    tempDiv.innerHTML = newFormHtml;
+    let newForm = tempDiv.firstElementChild;
+
+    newForm.classList.add("row");
+    newForm.id = `${formPrefix}${index}`;
+    addDeleteButton(newForm, index, formPrefix);
+
+    collectionSpan.appendChild(newForm); // Append the new form to the collection span
+    collection.dataset.index++;
+}
+
+function updateCollectionIndices(collection, formPrefix) {
+    let collectionDivs = collection.querySelectorAll(`div[id^='${formPrefix}']`);
+    collectionDivs.forEach(function (div, index) {
+        div.id = `${formPrefix}${index}`;
+        let deleteButton = div.querySelector('.btn.custom-btn-outline-danger');
+        if (deleteButton) {
+            deleteButton.id = `delete-${formPrefix}-${index}`;
+        }
+    });
+    // Update the index to the new number of elements
+    collection.dataset.index = collectionDivs.length;
+}
+
+
+
+
+
+</script>
+
+
 </body>
 </html>
 </div> 

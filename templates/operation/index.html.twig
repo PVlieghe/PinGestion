@@ -76,72 +76,9 @@
                 </div>
             </div>
         {% endif %}
-        <!-- Modal ajout -->
-        <div class="modal fade" id="ajoutModal" tabindex="-1" role="dialog" aria-labelledby="ajoutModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-mg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="ajoutModalLabel">Ajout d'une opération.</h5>
-                    </div>
-                    <div class="modal_nav">
-                        <ul class="nav nav-tabs" id="addTab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="add-content-tab" data-toggle="tab" href="#add-content" role="tab" aria-controls="add-content" aria-selected="true">Nom</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="add-gamme-tab" data-toggle="tab" href="#add-gamme" role="tab" aria-controls="add-gamme" aria-selected="false">Gammes</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class = "nav-link" id="add-machine-tab" data-toggle="tab" href="#add-machine" role="tab" aria-controls="add-machine" aria-selected="false">Machines</a>
-                            </li>
-                        </ul>
-                    </div>   
-                    {{ form_start(form, {'action': path('app_operation_new')})}}
-                    <div class="modal-body">
-                        <div class = "tab-content" id="addOpeContent">
-                            <div class ="tab-pane fade show active" id="add-content" role="tabpanel" aria-labelledby="add-content-tab">
-                                <div class="row">
-                                    {{ form_label(form.content)}}
-                                    {{ form_widget(form.content)}}
-                                </div>
-                            </div>
-                            <div class ="tab-pane fade show" id="add-gamme" role="tabpanel" aria-labelledby="add-gamme-tab">
-                                <div class="row">
-                                    <div id="gammeOpe" data-prototype="{{ form_widget(form.compoGamme.vars.prototype)|e('html_attr') }}">
-                                        <div class="mb-4 align-items-center">
-                                            {{ form_label(form.compoGamme)}}
-                                        </div>
-                                        <span>
-                                            {{ form_widget(form.compoGamme)}}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class ="tab-pane fade show" id="add-machine" role="tabpanel" aria-labelledby="add-machine-tab">
-                                <div class="row">
-                                    <div id="machineOpe" data-prototype="{{ form_widget(form.qualifOperations.vars.prototype)|e('html_attr') }}">
-                                        <div class="mb-4 align-items-center">
-                                            {{ form_label(form.qualifOperations)}}
-                                        </div>
-                                        <span>
-                                            {{ form_widget(form.qualifOperations)}}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
-                        <button type="submit" class="btn btn-primary">Valider</button>
-                    </div>
-                    {{ form_end(form)}}
-                </div>
-            </div>
-        </div>
-
-
+        
+        
+        {% include 'operation/new.html.twig' with {'form': form} %}
 
         <input type="text" id="searchInput" onkeyup="searchOperation()" placeholder="Rechercher une opération... (nom)">
         <div class="row">
@@ -166,69 +103,7 @@
                     </div>
 
 
-        <div class="modal fade" id="editModal-{{ operation.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel-{{ operation.id }}" aria-hidden="true">
-            <div class="modal-dialog modal-mg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel-{{ operation.id }}">Modifier l'operation: {{operation.content}}.</h5>
-                    </div>
-                    <div class="modal_nav">
-                        <ul class="nav nav-tabs" id="editTab-{{ operation.id }}" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="edit-content-tab-{{ operation.id }}" data-toggle="tab" href="#edit-content-{{ operation.id }}" role="tab" aria-controls="edit-content-{{ operation.id }}" aria-selected="true">Nom</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="edit-gamme-tab-{{ operation.id }}" data-toggle="tab" href="#edit-gamme-{{ operation.id }}" role="tab" aria-controls="edit-gamme-{{ operation.id }}" aria-selected="false">Gammes</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class = "nav-link" id="edit-machine-tab-{{ operation.id }}" data-toggle="tab" href="#edit-machine-{{ operation.id }}" role="tab" aria-controls="edit-machine-{{ operation.id }}" aria-selected="false">Machines</a>
-                            </li>
-                        </ul>
-                    </div>   
-                    {{ form_start(forms[operation.id], {'action': path('app_operation_edit',  {'id': operation.id})})}}
-                    <div class="modal-body">
-                        <div class = "tab-content" id="editOpeContent-{{ operation.id }}">
-                            <div class ="tab-pane fade show active" id="edit-content-{{ operation.id }}" role="tabpanel" aria-labelledby="edit-content-tab-{{ operation.id }}">
-                                <div class="row">
-                                    {{ form_label(forms[operation.id].content)}}
-                                    {{ form_widget(forms[operation.id].content)}}
-                                </div>
-                            </div>
-                            <div class ="tab-pane fade show" id="edit-gamme-{{ operation.id }}" role="tabpanel" aria-labelledby="edit-gamme-tab-{{ operation.id }}">
-                                <div class="row">
-                                    <div id="editGammeOpe-{{ operation.id }}" data-prototype="{{ form_widget(forms[operation.id].compoGamme.vars.prototype)|e('html_attr') }}">
-                                        <div class="mb-4 align-items-center">
-                                            {{ form_label(forms[operation.id].compoGamme)}}
-                                        </div>
-                                        <span>
-                                            {{ form_widget(forms[operation.id].compoGamme)}}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class ="tab-pane fade show" id="edit-machine-{{ operation.id }}" role="tabpanel" aria-labelledby="add-machine-tab">
-                                <div class="row">
-                                    <div id="editMachineOpe-{{ operation.id }}" data-prototype="{{ form_widget(forms[operation.id].qualifOperations.vars.prototype)|e('html_attr') }}">
-                                        <div class="mb-4 align-items-center">
-                                            {{ form_label(forms[operation.id].qualifOperations)}}
-                                        </div>
-                                        <span>
-                                            {{ form_widget(forms[operation.id].qualifOperations)}}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
-                        <button type="submit" class="btn btn-primary">Valider</button>
-                    </div>
-                    {{ form_end(forms[operation.id])}}
-                </div>
-            </div>
-        </div>
+                    {% include 'operation/edit.html.twig' with {'operation': operation, 'forms': forms} %}
         
 
                 {% endfor %}

@@ -30,16 +30,6 @@ class PosteType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
             ])
-            ->add('qualifPostes', CollectionType::class, [
-                'entry_type' => PosteToUserType::class,
-                'entry_options' => [
-                    'label' => false,
-                ],
-                'label' => ' (Facultatif) Ouvriers qualifiés pour utiliser cette machine :',
-                'allow_add' => true,
-                'allow_delete' => true,
-
-            ])
         ;
     }
 

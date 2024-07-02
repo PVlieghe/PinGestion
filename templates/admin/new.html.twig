@@ -1,0 +1,88 @@
+ <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-mg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Création d'un utilisateur</h5>
+                    </div>
+                    <div class="modal_nav">
+                        <ul class="nav nav-tabs" id="addTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="add-info-tab" data-toggle="tab" href="#add-info" role="tab" aria-controls="add-info" aria-selected="true">Informations</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="add-poste-tab" data-toggle="tab" href="#add-poste" role="tab" aria-controls="add-poste" aria-selected="false">Postes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="add-gamme-tab" data-toggle="tab" href="#add-gamme" role="tab" aria-controls="add-gamme" aria-selected="false">Référent</a>
+                            </li>
+                        </ul>
+                    </div>   
+                    {{ form_start(form, {'action': path('app_admin_add')})}}
+                        <div class="modal-body">
+                            <div class = "tab-content" id="addUserInfo">
+                                <div class ="tab-pane fade show active" id="add-info" role="tabpanel" aria-labelledby="add-info-tab">
+                                    <div class="row">
+                                        {{ form_row(form.email)}}
+                                    </div>
+                                    <div class="row mt-3">
+                                        {{ form_row(form.username)}}
+                                    </div>
+                                    <div class="row mt-3">
+                                        {{ form_row(form.password) }}
+                                    </div>
+                                    <div class="row mt-3 ">
+                                        <label>Rôle(s)</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4 d-inline-flex">
+                                            <div class="form-check form-check-inline">
+                                                {{ form_row(form.role_compta)}}
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check form-check-inline ">
+                                                {{ form_row(form.role_atelier)}}
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check form-check-inline ">
+                                                {{ form_row(form.role_admin)}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class ="tab-pane fade show" id="add-poste" role="tabpanel" aria-labelledby="add-poste-tab">
+                                    <div class="row">
+                                        <div id="addPosteUser" data-prototype="{{ form_widget(form.qualifPostes.vars.prototype)|e('html_attr') }}">
+                                            <div class="mb-4 align-items-center">
+                                                {{ form_label(form.qualifPostes)}}
+                                            </div>
+                                            <span>
+                                                {{ form_widget(form.qualifPostes)}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class ="tab-pane fade show" id="add-gamme" role="tabpanel" aria-labelledby="add-gamme-tab">
+                                    <div class="row">
+                                        <div id="addGammeUser" data-prototype="{{ form_widget(form.gammes.vars.prototype)|e('html_attr') }}">
+                                            <div class="mb-4 align-items-center">
+                                                {{ form_label(form.gammes)}}
+                                            </div>
+                                            <span>
+                                                {{ form_widget(form.gammes)}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>           
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
+                            <button type="submit" class="btn btn-primary">Valider</button>
+                        </div>
+                    {{ form_end(form)}}
+                </div>
+            </div>
+        </div>

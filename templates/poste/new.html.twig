@@ -1,47 +1,41 @@
-  <!-- Modal ajout -->
+        <!-- Modal ajout -->
         <div class="modal fade" id="ajoutModal" tabindex="-1" role="dialog" aria-labelledby="ajoutModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-mg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="ajoutModalLabel">Ajout d'une gamme.</h5>
+                        <h5 class="modal-title" id="ajoutModalLabel">Ajout d'un poste.</h5>
                     </div>
                     <div class="modal_nav">
                         <ul class="nav nav-tabs" id="addTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="add-info-tab" data-toggle="tab" href="#add-info" role="tab" aria-controls="add-info" aria-selected="true">Infos</a>
+                                <a class="nav-link active" id="add-name-tab" data-toggle="tab" href="#add-name" role="tab" aria-controls="add-name" aria-selected="true">Nom</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="add-compo-tab" data-toggle="tab" href="#add-compo" role="tab" aria-controls="add-compo" aria-selected="false">Opérations</a>
+                                <a class="nav-link" id="add-machine-tab" data-toggle="tab" href="#add-machine" role="tab" aria-controls="add-machine" aria-selected="false">Machines</a>
                             </li>
                         </ul>
                     </div>   
-                    {{ form_start(form, {'action': path('app_gamme_new')})}}
+                    {{ form_start(form, {'action': path('app_poste_new')})}}
                     <div class="modal-body">
-                        <div class = "tab-content" id="addGammeInfo">
-                            <div class ="tab-pane fade show active" id="add-info" role="tabpanel" aria-labelledby="add-info-tab">
+                        <div class = "tab-content" id="addPosteName">
+                            <div class ="tab-pane fade show active" id="add-name" role="tabpanel" aria-labelledby="add-name-tab">
                                 <div class="row">
-                                    {{ form_row(form.Name)}}
-                                </div>
-                                <div class="row mt-3">
-                                    {{ form_row(form.referent)}}
-                                </div>
-                                <div class="row mt-3">
-                                    {{ form_row(form.piece) }}
+                                    {{ form_label(form.name)}}
+                                    {{ form_widget(form.name)}}
                                 </div>
                             </div>
-                            <div class ="tab-pane fade show" id="add-compo" role="tabpanel" aria-labelledby="add-compo-tab">
+                            <div class ="tab-pane fade show" id="add-machine" role="tabpanel" aria-labelledby="add-machine-tab">
                                 <div class="row">
-                                    <div id="compoGamme" data-prototype="{{ form_widget(form.compoGammes.vars.prototype)|e('html_attr') }}">
+                                    <div id="machinePoste" data-prototype="{{ form_widget(form.qualifMachines.vars.prototype)|e('html_attr') }}">
                                         <div class="mb-4 align-items-center">
-                                            {{ form_label(form.compoGammes)}}
+                                            {{ form_label(form.qualifMachines)}}
                                         </div>
                                         <span>
-                                            {{ form_widget(form.compoGammes)}}
+                                            {{ form_widget(form.qualifMachines)}}
                                         </span>
                                     </div>
                                 </div>
                             </div>
-                            
                         </div>
                     </div>
                     <div class="modal-footer">

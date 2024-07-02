@@ -17,13 +17,22 @@ class GammeController extends AbstractController
     #[Route('/', name: 'app_gamme_index', methods: ['GET'])]
     public function index(Request $request, GammeRepository $gammeRepository): Response
     {
+        $forms = [];
+        $gammes = $gammeRepository -> findAll();
+
+        foreach($gammes as $gamme) {
+            $formIndex = $this->createForm(GammeType::class, $gamme);
+            $formIndex->handleRequest($request);
+            $forms[$gamme->getId()] = $formIndex->createView();
+        }
         $newGamme = new Gamme();
         $form = $this->createForm(GammeType::class, $newGamme);
         $form->handleRequest($request);
         return $this->render('gamme/index.html.twig', [
-            'gammes' => $gammeRepository->findAll(),
+            'gammes' => $gammes,
             'form' => $form,
-            'success' => null,
+            'forms' => $forms,
+            'success' => $request->query->get('success')
 
         ]);
     }
@@ -31,6 +40,7 @@ class GammeController extends AbstractController
     #[Route('/new', name: 'app_gamme_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $success = null;
         $gamme = new Gamme();
         $form = $this->createForm(GammeType::class, $gamme);
         $form->handleRequest($request);
@@ -43,50 +53,51 @@ class GammeController extends AbstractController
             $entityManager->persist($gamme);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_gamme_index', [], Response::HTTP_SEE_OTHER);
+            $success =  "La gamme \"" .$gamme -> getName()."\" a bien été ajoutée! ";
         }
 
-        return $this->render('gamme/new.html.twig', [
-            'gamme' => $gamme,
-            'form' => $form,
-            'success' =>'La gamme '. $gamme->getName() .' a bien été ajoutée!'
-        ]);
+        return $this->redirectToRoute('app_gamme_index', [
+            'success' => $success
+        ], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}', name: 'app_gamme_show', methods: ['GET'])]
-    public function show(Gamme $gamme): Response
-    {
-        return $this->render('gamme/show.html.twig', [
-            'gamme' => $gamme,
-        ]);
-    }
 
     #[Route('/{id}/edit', name: 'app_gamme_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Gamme $gamme, EntityManagerInterface $entityManager): Response
     {
+        $success = null;
         $form = $this->createForm(GammeType::class, $gamme);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $compoData = $form ->getData()->getCompoGammes();
+            foreach($compoData as $compo) {
+                $compo->setGamme($gamme);
+            }
+            $entityManager->persist($gamme);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_gamme_index', [], Response::HTTP_SEE_OTHER);
+            $success =  "La gamme \"" .$gamme -> getName()."\" a bien été modifiée! ";
+
         }
 
-        return $this->render('gamme/edit.html.twig', [
-            'gamme' => $gamme,
-            'form' => $form,
-        ]);
+        return $this->redirectToRoute('app_gamme_index', [
+            'success' => $success
+        ], Response::HTTP_SEE_OTHER);
+    
     }
 
     #[Route('/{id}', name: 'app_gamme_delete', methods: ['POST'])]
     public function delete(Request $request, Gamme $gamme, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$gamme->getId(), $request->getPayload()->getString('_token'))) {
+            $success =  "La gamme \"" .$gamme->getName(). "\" a bien été supprimée!";
             $entityManager->remove($gamme);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_gamme_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_gamme_index', [
+            'success' => $success
+        ], Response::HTTP_SEE_OTHER);
     }
 }

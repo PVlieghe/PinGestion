@@ -50,12 +50,8 @@ class PosteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $qualifMachine = $form ->getData()->getQualifMachines();
-            $qualifPoste = $form ->getData()->getQualifPostes();
             foreach($qualifMachine as $mac) {
                 $mac->setPoste($poste);
-            }
-            foreach($qualifPoste as $pos) {
-                $pos->setPoste($poste);
             }
 
             $entityManager->persist($poste);
@@ -77,12 +73,8 @@ class PosteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $qualifMachine = $form ->getData()->getQualifMachines();
-            $qualifPoste = $form ->getData()->getQualifPostes();
             foreach($qualifMachine as $mac) {
                 $mac->setPoste($poste);
-            }
-            foreach($qualifPoste as $poste) {
-                $poste->setPoste($poste);
             }
 
             $entityManager->persist($poste);

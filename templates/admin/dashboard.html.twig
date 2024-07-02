@@ -62,9 +62,9 @@
        <div class="row mb-3">
             <h2 class="col mb-0">Liste des utilisateurs</h2>
             <div  class="col" style="display:contents">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-              <i class="bi bi-person-plus"></i>  ajouter 
-            </button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                <i class="bi bi-person-plus"></i>  ajouter 
+                </button>
             </div>
         </div>
         {% if success %}
@@ -74,56 +74,12 @@
                 </div>
             </div>
         {% endif %}
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-mg" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Création d'un utilisateur</h5>
 
-            </div>
-            <div class="modal-body">
-                {{ form_start(form)}}
-                <div class="row">
-                    {{ form_row(form.email)}}
-                </div>
-                <div class="row mt-3">
-                    {{ form_row(form.username)}}
-                </div>
-                <div class="row mt-3">
-                     {{ form_row(form.password) }}
-                </div>
-                <div class="row mt-3 ">
-                    <label>Rôle(s)</label>
-                </div>
-                <div class="row">
-                    
-                    <div class="col-4 d-inline-flex">
-                        <div class="form-check form-check-inline">
-                            {{ form_row(form.role_compta)}}
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-check form-check-inline ">
-                            {{ form_row(form.role_atelier)}}
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-check form-check-inline ">
-                            {{ form_row(form.role_admin)}}
-                        </div>
-                    </div>
-                </div>
-                
-                    
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
-                <button type="submit" class="btn btn-primary">Valider</button>
-            </div>{{ form_end(form)}}
-            </div>
-        </div>
-        </div>
+        {% include 'admin/new.html.twig' with {'form': form} %}
+
+       
+
+
         <input type="text" id="searchInput" onkeyup="searchUsers()" placeholder="Rechercher un utilisateur... (email)">
         <div class="row">
             <table id="usersTable">
@@ -142,44 +98,40 @@
                         <td>{{ user.id }}</td>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
-                                  <td>
-                    {% if 'ROLE_ADMIN' not in user.roles %}
-                        <a  class="btn btn-success btn-sm rounded" href="{{ path('app_admin_adminup', {'id': user.id}) }}"><i class="bi bi-person-check"></i>  admin</a>
-                    {% else %}
-                        <a class="btn btn-warning btn-sm rounded" href="{{ path('app_admin_admindown', {'id': user.id}) }}"><i class="bi bi-person-dash"></i>  admin</a>
-                    {% endif %}
+                        <td>
+                            {% if 'ROLE_ADMIN' not in user.roles %}
+                                <div class="btn btn-warning btn-sm rounded btn-no-pointer">admin</div>
+                            {% else %}
+                                <div class="btn btn-success btn-sm rounded btn-no-pointer">admin</div>
+                            {% endif %}
 
-                    {% if 'ROLE_ATELIER' not in user.roles %}
-                        <form action="{{ path('app_admin_atelierup', {'id': user.id}) }}" method="post" class="d-inline">
-                            <button type"submit" class="btn btn-success btn-sm rounded"><i class="bi bi-person-check"></i>  atelier</button>
-                        </form>
-                    {% else %}
-                        <form action="{{ path('app_admin_atelierdown', {'id': user.id}) }}" method="post" class="d-inline">
-                            <button type"submit" class="btn btn-warning btn-sm rounded"><i class="bi bi-person-dash"></i>  atelier</button>
-                        </form>
-                    {% endif %}
+                            {% if 'ROLE_ATELIER' not in user.roles %}
+                                <div class="btn btn-warning btn-sm rounded btn-no-pointer">atelier</div>
+                            {% else %}
+                                <div class="btn btn-success btn-sm rounded btn-no-pointer">atelier</div>
+                            {% endif %}
 
-                    {% if 'ROLE_COMPTA' not in user.roles %}
-                        <form action="{{ path('app_admin_comptaup', {'id': user.id}) }}" method="post" class="d-inline">
-                            <button type"submit" class="btn btn-success btn-sm rounded"><i class="bi bi-person-check"></i>  compta</button>
-                        </form>
-                    {% else %}
-                        <form action="{{ path('app_admin_comptadown', {'id': user.id}) }}" method="post" class="d-inline">
-                            <button type"submit" class="btn btn-warning btn-sm rounded"><i class="bi bi-person-dash"></i>  compta</button>
-                        </form>
-                    {% endif %}
-                </td>
-                <td>
-                    <form action="{{ path('app_user_delete', {'id': user.id}) }}" method="post" class="d-inline" onsubmit="return confirm('La suppression d'un utilisateur entraînera celle de ses recettes ainsi que de ses commentaires, voulez-vous continuer ?');">
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </form>
-                     <button type="submit" class="btn btn-info btn-sm">
-                            <i class="bi bi-pencil"></i>
-                    </button>
-                </td>
+                            {% if 'ROLE_COMPTA' not in user.roles %}
+                                <div class="btn btn-warning btn-sm rounded btn-no-pointer">compta</div>
+                            {% else %}
+                                <div class="btn btn-success btn-sm rounded btn-no-pointer">compta</div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form action="{{ path('app_user_delete', {'id': user.id}) }}" method="post" class="d-inline" onsubmit="return confirm('La suppression d'un utilisateur entraînera celle de ses recettes ainsi que de ses commentaires, voulez-vous continuer ?');">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                            <span data-toggle="tooltip" title="Modifier l'utilisateur">
+                                <button type="button" class="btn btn-info btn-sm me-2" data-toggle="modal" data-target="#editModal-{{ user.id }}">
+                                    <i class="bi bi-link"></i>
+                                </button>
+                            </span>
+                            {% include 'admin/edit.html.twig' with {'user': user, 'forms': forms} %}
+                        </td>
                     </tr>
+                    
                     {% endfor %}
                 </tbody>
             </table>
@@ -208,6 +160,100 @@
                 }
             }
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let userIds = document.querySelectorAll("[id^='editUser-']");
+            userIds.forEach(function (element) {
+                let userId = element.id.replace('editUser-', '');
+                    setupCollection('editPosteUser-' + userId, 'user_qualifPostes_');
+                    setupCollection('editGammeUser-' + userId, 'user_gammes_');
+            });
+
+            setupCollection('addPosteUser', 'user_qualifPostes_');
+            setupCollection('addGammeUser', 'user_gammes_');
+        });
+
+function setupCollection(collectionId, formPrefix) {
+    let collection = document.querySelector(`#${collectionId}`);
+    if (!collection) return; // Exit if the collection does not exist
+
+    let collectionSpan = collection.querySelector("span");
+
+    let addButton = document.createElement("button");
+    addButton.className = "btn custom-btn-outline-success rounded mt-2";
+    addButton.type = "button";
+    addButton.innerHTML = '<i class="bi bi-plus-circle-fill icon-size"></i>';
+    collection.appendChild(addButton); // Append the add button to the collection
+
+    // Initialize the index to the number of existing elements
+    let existingElements = collection.querySelectorAll(`div[id^='${formPrefix}']`);
+    collection.dataset.index = existingElements.length;
+
+    updateDeleteButtons(collection, formPrefix);
+
+    addButton.addEventListener("click", function () {
+        addNewForm(collection, collectionSpan, collectionId, formPrefix);
+    });
+}
+
+function updateDeleteButtons(collection, formPrefix) {
+    let collectionDivs = collection.querySelectorAll(`div[id^='${formPrefix}']`);
+    collectionDivs.forEach(function (div, index) {
+        if (!div.querySelector('.btn.custom-btn-outline-danger')) {
+            addDeleteButton(div, index, formPrefix);
+        }
+    });
+}
+
+function addDeleteButton(div, index, formPrefix) {
+    let divSuppr = document.createElement("div");
+    divSuppr.className = "col-1 centered";
+
+    let deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.id = `delete-${formPrefix}-${index}`;
+    deleteButton.className = "btn custom-btn-outline-danger bouton-suppr-form";
+    deleteButton.innerHTML = '<i class="bi bi-trash icon-size"></i>';
+
+    divSuppr.appendChild(deleteButton);
+    div.appendChild(divSuppr);
+
+    deleteButton.addEventListener("click", function () {
+        div.remove();
+        // Update index and IDs of remaining elements
+        updateCollectionIndices(collection, formPrefix);
+    });
+}
+
+function addNewForm(collection, collectionSpan, collectionId, formPrefix) {
+    let prototype = collection.dataset.prototype;
+    let index = collection.dataset.index;
+    let newFormHtml = prototype.replace(/__name__/g, index);
+
+    let tempDiv = document.createElement('div');
+    tempDiv.innerHTML = newFormHtml;
+    let newForm = tempDiv.firstElementChild;
+
+    newForm.classList.add("row");
+    newForm.id = `${formPrefix}${index}`;
+    addDeleteButton(newForm, index, formPrefix);
+
+    collectionSpan.appendChild(newForm); // Append the new form to the collection span
+    collection.dataset.index++;
+}
+
+function updateCollectionIndices(collection, formPrefix) {
+    let collectionDivs = collection.querySelectorAll(`div[id^='${formPrefix}']`);
+    collectionDivs.forEach(function (div, index) {
+        div.id = `${formPrefix}${index}`;
+        let deleteButton = div.querySelector('.btn.custom-btn-outline-danger');
+        if (deleteButton) {
+            deleteButton.id = `delete-${formPrefix}-${index}`;
+        }
+    });
+    // Update the index to the new number of elements
+    collection.dataset.index = collectionDivs.length;
+}
 
     </script>
 </body>

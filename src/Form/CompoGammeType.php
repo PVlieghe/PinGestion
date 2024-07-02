@@ -16,7 +16,9 @@ class CompoGammeType extends AbstractType
         $builder
             ->add('operation', EntityType::class, [
                 'class' => Operation::class,
-                'choice_label' => 'id',
+                'attr' => ['class' => 'form-control custom-form-control m-2'],
+                'choice_label' => 'content',
+                'label' => false
             ])
         ;
     }

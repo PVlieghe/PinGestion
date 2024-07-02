@@ -1,26 +1,58 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Gamme{% endblock %}
-
-{% block body %}
-    <h1>Gamme</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ gamme.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ gamme.Name }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_gamme_index') }}">back to list</a>
-
-    <a href="{{ path('app_gamme_edit', {'id': gamme.id}) }}">edit</a>
-
-    {{ include('gamme/_delete_form.html.twig') }}
-{% endblock %}
+        <div class="modal fade" id="showModal-{{ gamme.id }}" tabindex="-1" role="dialog" aria-labelledby="showModalLabel-{{ gamme.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-mg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel-{{ gamme.id }}">{{gamme.Name}}.</h5>
+                    </div>
+                   
+                    <div class="modal-body">
+                        <div class = "tab-content" id="showGamme-{{ gamme.id }}">
+                            <div class="row mb-4 pb-4">
+                                <div class="col-md-5 d-flex flex-column justify-content-center">
+                                    <div class="row mb-3">
+                                        <div class="col-auto">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+                                        <div class="col">
+                                            {% if gamme.referent %}
+                                                <strong>Référent :</strong> {{ gamme.referent.username }}
+                                            {% else %}
+                                                <strong>Référent :</strong> Pas de référent pour cette gamme.
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-auto">
+                                            <i class="bi bi-box"></i>
+                                        </div>
+                                        <div class="col">
+                                            {% if gamme.piece %}
+                                                <strong>Pièce :</strong> {{ gamme.piece.name }}
+                                            {% else %}
+                                                <span class="text-danger"><i class="bi bi-exclamation-circle"></i> Pas de pièce associée à la gamme.</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-1 d-flex justify-content-center align-items-center">
+                                    <div class="vr"></div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <strong>Opération(s) composant cette gamme :</strong>
+                                    <ul class="list-unstyled mt-2">
+                                        {% for compo in gamme.compoGammes %}
+                                            <li>{{ compo.operation.content }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
+                    </div>
+                </div>
+            </div>
+        </div>

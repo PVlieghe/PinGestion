@@ -1,13 +1,52 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Edit Gamme{% endblock %}
-
-{% block body %}
-    <h1>Edit Gamme</h1>
-
-    {{ include('gamme/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_gamme_index') }}">back to list</a>
-
-    {{ include('gamme/_delete_form.html.twig') }}
-{% endblock %}
+        <div class="modal fade" id="editModal-{{ gamme.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel-{{ gamme.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-mg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel-{{ gamme.id }}">Modifier la gamme : {{gamme.Name}}.</h5>
+                    </div>
+                    <div class="modal_nav">
+                        <ul class="nav nav-tabs" id="editTab-{{ gamme.id }}" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="edit-info-tab-{{ gamme.id }}" data-toggle="tab" href="#edit-info-{{ gamme.id }}" role="tab" aria-controls="edit-info-{{ gamme.id }}" aria-selected="true">Infos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="edit-compo-tab-{{ gamme.id }}" data-toggle="tab" href="#edit-compo-{{ gamme.id }}" role="tab" aria-controls="edit-compo-{{ gamme.id }}" aria-selected="false">Opérations</a>
+                            </li>
+                        </ul>
+                    </div>   
+                    {{ form_start(forms[gamme.id], {'action': path('app_gamme_edit',  {'id': gamme.id})})}}
+                    <div class="modal-body">
+                        <div class = "tab-content" id="editGamme-{{ gamme.id }}">
+                            <div class ="tab-pane fade show active" id="edit-info-{{ gamme.id }}" role="tabpanel" aria-labelledby="edit-info-tab-{{ gamme.id }}">
+                                <div class="row">
+                                    {{ form_row(forms[gamme.id].Name)}}
+                                </div>
+                                <div class="row mt-3">
+                                    {{ form_row(forms[gamme.id].referent)}}
+                                </div>
+                                <div class="row mt-3">
+                                    {{ form_row(forms[gamme.id].piece) }}
+                                </div>
+                            </div>
+                            <div class ="tab-pane fade show" id="edit-compo-{{ gamme.id }}" role="tabpanel" aria-labelledby="edit-compo-tab-{{ gamme.id }}">
+                                <div class="row">
+                                    <div id="editCompoGamme-{{ gamme.id }}" data-prototype="{{ form_widget(forms[gamme.id].compoGammes.vars.prototype)|e('html_attr') }}">
+                                        <div class="mb-4 align-items-center">
+                                            {{ form_label(forms[gamme.id].compoGammes)}}
+                                        </div>
+                                        <span>
+                                            {{ form_widget(forms[gamme.id].compoGammes)}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
+                        <button type="submit" class="btn btn-primary">Valider</button>
+                    </div>
+                    {{ form_end(forms[gamme.id])}}
+                </div>
+            </div>
+        </div>
