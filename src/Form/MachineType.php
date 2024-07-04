@@ -26,9 +26,10 @@ class MachineType extends AbstractType
                 'entry_options' => [
                     'label' => false,
                 ],
-                'label' => " (Facultatif) Postes qualifiés pour réaliser l'opération : ",
+                'label' => "Postes qualifiés pour réaliser l'opération : ",
                 'allow_add' => true,
                 'allow_delete' => true,
+                'required' => true,
             ])
             ->add('qualifOperations', CollectionType::class, [
                 'entry_type' => MachineToOpeType::class,

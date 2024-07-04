@@ -16,6 +16,21 @@ class PieceRepository extends ServiceEntityRepository
         parent::__construct($registry, Piece::class);
     }
 
+
+
+
+    /**
+     * @return Piece[] Returns an array of Piece objects
+     */
+    public function findFabriquePieces()
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.fabrique = :fabrique')
+            ->setParameter('fabrique', true)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Piece[] Returns an array of Piece objects
     //     */

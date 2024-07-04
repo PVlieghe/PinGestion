@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\MachineRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\MachineRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints\Count;
 
 #[ORM\Entity(repositoryClass: MachineRepository::class)]
 class Machine
@@ -28,13 +29,21 @@ class Machine
      * @var Collection<int, QualifMachine>
      */
     #[ORM\OneToMany(targetEntity: QualifMachine::class, mappedBy: 'machine', orphanRemoval: true, cascade:['persist', 'remove'])]
+    #[Count(min : 1, minMessage : "Veuillez affilier au moins un poste à cette machine")]
     private Collection $qualifMachines;
+
+    /**
+     * @var Collection<int, LigneReal>
+     */
+    #[ORM\OneToMany(targetEntity: LigneReal::class, mappedBy: 'machine')]
+    private Collection $ligneReals;
 
 
     public function __construct()
     {
         $this->qualifOperations = new ArrayCollection();
         $this->qualifMachines = new ArrayCollection();
+        $this->ligneReals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,5 +121,52 @@ class Machine
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, LigneReal>
+     */
+    public function getLigneReals(): Collection
+    {
+        return $this->ligneReals;
+    }
+
+    public function addLigneReal(LigneReal $ligneReal): static
+    {
+        if (!$this->ligneReals->contains($ligneReal)) {
+            $this->ligneReals->add($ligneReal);
+            $ligneReal->setMachine($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLigneReal(LigneReal $ligneReal): static
+    {
+        if ($this->ligneReals->removeElement($ligneReal)) {
+            // set the owning side to null (unless already changed)
+            if ($ligneReal->getMachine() === $this) {
+                $ligneReal->setMachine(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getQualifiedPostes(): ?Collection
+    {
+        $qualifs = $this->getQualifMachines();
+        if($qualifs){
+            $postes = [];
+            foreach($qualifs as $qualif){
+                $postes = $qualif->getPoste();
+            }
+        }
+
+        else{
+            return null;
+        }
+
+        return $postes;
     }
 }

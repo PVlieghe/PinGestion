@@ -28,10 +28,14 @@ class MachineController extends AbstractController
             $formIndex->handleRequest($request);
             $forms[$machine->getId() ] = $formIndex->createView();
         }
-
-        $newMachine = new Machine();
-        $form = $this->createForm(MachineType::class, $newMachine);
-        $form->handleRequest($request);
+        if(!$request->query->get('form')){
+            $newMachine = new Machine();
+            $form = $this->createForm(MachineType::class, $newMachine);
+            $form->handleRequest($request);
+        }
+        else{
+            $form = $request->query->get('form');
+        }
 
         return $this->render('machine/index.html.twig', [
             'machines' => $machines,
@@ -65,7 +69,8 @@ class MachineController extends AbstractController
         }
 
         return $this->redirectToRoute('app_machine_index', [
-            'success' => $success
+            'success' => $success,
+            'form' => $form
         ]);
     }
 
@@ -93,7 +98,8 @@ class MachineController extends AbstractController
         }
 
         return $this->redirectToRoute('app_machine_index', [
-            'success' => $success
+            'success' => $success,
+            
         ]);
     }
 

@@ -32,9 +32,16 @@ class Gamme
     #[ORM\Column(length: 255)]
     private ?string $Name = null;
 
+    /**
+     * @var Collection<int, Realisation>
+     */
+    #[ORM\OneToMany(targetEntity: Realisation::class, mappedBy: 'gamme')]
+    private Collection $realisations;
+
     public function __construct()
     {
         $this->compoGammes = new ArrayCollection();
+        $this->realisations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -104,6 +111,36 @@ class Gamme
     public function setName(string $Name): static
     {
         $this->Name = $Name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Realisation>
+     */
+    public function getRealisations(): Collection
+    {
+        return $this->realisations;
+    }
+
+    public function addRealisation(Realisation $realisation): static
+    {
+        if (!$this->realisations->contains($realisation)) {
+            $this->realisations->add($realisation);
+            $realisation->setGamme($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRealisation(Realisation $realisation): static
+    {
+        if ($this->realisations->removeElement($realisation)) {
+            // set the owning side to null (unless already changed)
+            if ($realisation->getGamme() === $this) {
+                $realisation->setGamme(null);
+            }
+        }
 
         return $this;
     }

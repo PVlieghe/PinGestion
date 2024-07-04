@@ -49,10 +49,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: QualifPoste::class, mappedBy: 'usr', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $qualifPostes;
 
+    /**
+     * @var Collection<int, Realisation>
+     */
+    #[ORM\OneToMany(targetEntity: Realisation::class, mappedBy: 'ouvrier')]
+    private Collection $realisations;
+
     public function __construct()
     {
         $this->gammes = new ArrayCollection();
         $this->qualifPostes = new ArrayCollection();
+        $this->realisations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -199,5 +206,47 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Realisation>
+     */
+    public function getRealisations(): Collection
+    {
+        return $this->realisations;
+    }
+
+    public function addRealisation(Realisation $realisation): static
+    {
+        if (!$this->realisations->contains($realisation)) {
+            $this->realisations->add($realisation);
+            $realisation->setOuvrier($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRealisation(Realisation $realisation): static
+    {
+        if ($this->realisations->removeElement($realisation)) {
+            // set the owning side to null (unless already changed)
+            if ($realisation->getOuvrier() === $this) {
+                $realisation->setOuvrier(null);
+            }
+        }
+
+        return $this;
+    }
+    public function isQualifiedForPostes($poste): bool
+    {
+        $qualifs = $this->getQualifPostes();
+
+        if($qualifs != []){
+            return true;
+        }
+
+        else{
+            return false;
+        }
     }
 }

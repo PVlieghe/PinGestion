@@ -60,67 +60,19 @@
 <body>
     <div class="container">
         <div class="row mb-3">
-            <h2 class="col mb-0">Liste des pièces</h2>
-            <div  class="col" style="display:contents">
-                <span data-toggle="tooltip" title="Créer une pièce">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajoutModal">
-                        <i class="bi bi-plus"></i>  Ajouter 
-                    </button>
-                </span>
-            </div>
+            <h2 class="col mb-0">Créer une réalisation (1/3)</h2>
         </div>
-        {% if success %}
-            <div id="success" class="row">
-                <div class="alert alert-success" role="alert">
-                     {{ success }}
+        Bienvenue dans la page de création de réalisation. Dans un premier temps, veuillez choisir la pièce à créer.
+        <div class = "row">
+            {{ form_start(form, {'attr': {'class': 'form-inline'}}) }}
+                <div class="col-auto">
+                    {{ form_widget(form.piece) }}
                 </div>
-            </div>
-        {% endif %}
-      
-        {% include 'piece/new.html.twig' with {'form': form} %}
-
-        
-        <input type="text" id="searchInput" onkeyup="searchPiece()" placeholder="Rechercher une pièce... (nom ou libelle)">
-        <div class="row">
-            <div id="entityGrid">
-                {% for piece in pieces %}
-                    <div class="grid-item">
-                        <span data-toggle="tooltip" title="{{piece.name}}">
-                            <div class="entity-content">
-                                {{ piece.name }}
-                            </div>
-                        </span>
-                        <span data-toggle="tooltip" title="{{piece.libelle}}">
-                            <div class="entity-content">
-                                {{ piece.libelle }}
-                            </div>
-                        </span>
-                        <div class="entity-actions">
-                            <span data-toggle="tooltip" title="Voir la pièce">
-                                <button type="button" class="btn btn-dark me-2" data-toggle="modal" data-target="#showModal-{{ piece.id }}">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                            </span>
-                            <span data-toggle="tooltip" title="Modifier la piece">
-                                <button type="button" class="btn btn-info me-2" data-toggle="modal" data-target="#editModal-{{ piece.id }}">
-                                    <i class="bi bi-link"></i>
-                                </button>
-                            </span>
-                            <span data-toggle="tooltip" title="Supprimer la pièce">
-                                {{ include('piece/_delete_form.html.twig') }}
-                            </span>
-                        </div>
-                    </div>
-
-
-                 {% include 'piece/edit.html.twig' with {'piece': piece, 'forms': forms} %}
-        
-
-                {% endfor %}
-            </div>
-            
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary btn-sm">Valider</button>
+                </div>
+            {{ form_end(form) }}
         </div>
-    </div>
 
 <script>
    function searchPiece() {

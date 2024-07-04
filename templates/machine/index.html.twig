@@ -76,6 +76,14 @@
                 </div>
             </div>
         {% endif %}
+            {# Display errors for the new machine form #}
+    {% if form.vars.errors|length > 0 %}
+        <div class="row">
+            <div class="alert alert-danger" role="alert">
+                {{ form_errors(form) }}
+            </div>
+        </div>
+    {% endif %}
       
         {% include 'machine/new.html.twig' with {'form': form} %}
 

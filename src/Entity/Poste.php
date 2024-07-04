@@ -30,10 +30,17 @@ class Poste
     #[ORM\OneToMany(targetEntity: QualifMachine::class, mappedBy: 'poste', orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $qualifMachines;
 
+    /**
+     * @var Collection<int, LigneReal>
+     */
+    #[ORM\OneToMany(targetEntity: LigneReal::class, mappedBy: 'poste')]
+    private Collection $ligneReals;
+
     public function __construct()
     {
         $this->qualifPostes = new ArrayCollection();
         $this->qualifMachines = new ArrayCollection();
+        $this->ligneReals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -107,6 +114,36 @@ class Poste
             // set the owning side to null (unless already changed)
             if ($qualifMachine->getPoste() === $this) {
                 $qualifMachine->setPoste(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LigneReal>
+     */
+    public function getLigneReals(): Collection
+    {
+        return $this->ligneReals;
+    }
+
+    public function addLigneReal(LigneReal $ligneReal): static
+    {
+        if (!$this->ligneReals->contains($ligneReal)) {
+            $this->ligneReals->add($ligneReal);
+            $ligneReal->setPoste($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLigneReal(LigneReal $ligneReal): static
+    {
+        if ($this->ligneReals->removeElement($ligneReal)) {
+            // set the owning side to null (unless already changed)
+            if ($ligneReal->getPoste() === $this) {
+                $ligneReal->setPoste(null);
             }
         }
 

@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réalisations{% endblock %}
+
+{% block body %}
+<div class="body">
+       <style>
+            body {
+            background-color: #f2f2f2; /* Fond d'écran gris */
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-container, .form-container {
+            flex: 1;
+            margin: 10px;
+        }
+        .form-container {
+            max-width: 400px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: black;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Ligne de fond gris clair */
+        }
+        tr:nth-child(odd) {
+            background-color: #fff; /* Ligne de fond blanc */
+        }
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+
+<body>
+    <div class="container">
+       <div class="row mb-3">
+            <h2 class="col mb-0">Liste des réalisations</h2>
+            <div  class="col" style="display:contents">
+                <a type="button" class="btn btn-primary" href="{{ path('app_realisation_new_first') }}">
+                <i class="bi bi-person-plus"></i>  Créer
+                </a>
+            </div>
+        </div>
+        {% if success %}
+            <div id="success" class="row">
+                <div class="alert alert-success" role="alert">
+                     {{ success }}
+                </div>
+            </div>
+        {% endif %}
+
+        <input type="text" id="searchInput" onkeyup="searchReals()" placeholder="Rechercher une réalisation... (par pièce)">
+        <div class="row">
+            <table id="realsTable">
+                <thead>
+                    <tr>
+                        <th>Pièce</th>
+                        <th>Ouvrier</th>
+                        <th>Durée</th>
+                        <th>Nombre d'opération</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for real in reals %}
+                    <tr>
+                        <td>{{ real.gamme.piece.name }} ({{real.gamme.piece.libelle}})</td>
+                        <td>{{ real.ouvrier.username }}</td>
+                        <td></td>
+                        <td>{{ real.ligneReals|length }}</td>
+                        <td>{{ real.createdAt|date('d/m/Y') }}</td>
+                    </tr>
+                    
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function searchReals() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("realsTable");
+            tr = table.getElementsByTagName("tr");
+
+            // Suppose the email is in the second column (index 1)
+            var emailColumnIndex = 1;
+
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                if (td[emailColumnIndex]) {
+                    txtValue = td[emailColumnIndex].textContent || td[emailColumnIndex].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    }
+                }
+            }
+        }
+
+
+    </script>
+</body>
+</html>
+</div> 
+{% endblock %}

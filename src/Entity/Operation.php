@@ -31,10 +31,17 @@ class Operation
     #[ORM\OneToMany(targetEntity: QualifOperation::class, mappedBy: 'operation', orphanRemoval: true,  cascade:['persist', 'remove'])]
     private Collection $qualifOperations;
 
+    /**
+     * @var Collection<int, LigneReal>
+     */
+    #[ORM\OneToMany(targetEntity: LigneReal::class, mappedBy: 'operation')]
+    private Collection $ligneReals;
+
     public function __construct()
     {
         $this->compoGamme = new ArrayCollection();
         $this->qualifOperations = new ArrayCollection();
+        $this->ligneReals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -113,6 +120,53 @@ class Operation
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, LigneReal>
+     */
+    public function getLigneReals(): Collection
+    {
+        return $this->ligneReals;
+    }
+
+    public function addLigneReal(LigneReal $ligneReal): static
+    {
+        if (!$this->ligneReals->contains($ligneReal)) {
+            $this->ligneReals->add($ligneReal);
+            $ligneReal->setOperation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLigneReal(LigneReal $ligneReal): static
+    {
+        if ($this->ligneReals->removeElement($ligneReal)) {
+            // set the owning side to null (unless already changed)
+            if ($ligneReal->getOperation() === $this) {
+                $ligneReal->setOperation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getQualifiedMachines(): ?Collection
+    {
+        $qualifs = $this->getQualifOperations();
+        if($qualifs){
+            $machines = [];
+            foreach($qualifs as $qualif){
+                $machines = $qualif->getMachine();
+            }
+        }
+
+        else{
+            return null;
+        }
+
+        return $machines;
     }
 
 }

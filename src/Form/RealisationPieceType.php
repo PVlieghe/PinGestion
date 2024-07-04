@@ -1,25 +1,28 @@
 <?php
 
-namespace App\Form;
-
-use App\Entity\Poste;
-use App\Entity\QualifMachine;
+use App\Entity\Piece;
+use App\Repository\PieceRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MachineToPosteType extends AbstractType
+
+class RealisationPieceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('poste', EntityType::class, [
-                'class' => Poste::class,
+            ->add('piece', EntityType::class, [
+                'class' => Piece::class,
                 'attr' => ['class' => 'form-control custom-form-control m-2'],
-                'choice_label' => 'Name',
-                'label' => false,
-                'required' => true
+                'query_builder' => function (PieceRepository $er) {
+                    return $er->createQueryBuilder('p')
+                        ->where('p.fabrique = :fabrique')
+                        ->setParameter('fabrique', true);
+                },
+                'choice_label' => 'name',
+                'label' => false
             ])
         ;
     }
@@ -27,7 +30,7 @@ class MachineToPosteType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => QualifMachine::class,
+            
         ]);
     }
 }
