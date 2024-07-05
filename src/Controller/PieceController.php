@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/piece')]
+#[Route('atelier/piece')]
 class PieceController extends AbstractController
 {
     #[Route('/', name: 'app_piece_index', methods: ['GET'])]

@@ -37,8 +37,9 @@ security:
     access_control:
         - { path: ^/login$, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
-
+        - { path: ^/menu, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/atelier, roles: ROLE_ATELIER}
+        - { path: ^/compta, roles: ROLE_COMPTA }
 when@test:
     security:
         password_hashers:

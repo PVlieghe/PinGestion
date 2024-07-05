@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/poste')]
+#[Route('atelier/poste')]
 class PosteController extends AbstractController
 {
     #[Route('/', name: 'app_poste_index', methods: ['GET'])]

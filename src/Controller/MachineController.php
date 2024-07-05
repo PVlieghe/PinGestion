@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/machine')]
+#[Route('atelier/machine')]
 class MachineController extends AbstractController
 {
     #[Route('/', name: 'app_machine_index', methods: ['GET'])]

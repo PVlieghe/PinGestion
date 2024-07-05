@@ -25,12 +25,13 @@ class LigneReal
     #[ORM\JoinColumn(nullable: true)]
     private ?Poste $poste = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateInterval $duree = null;
 
     #[ORM\ManyToOne(inversedBy: 'ligneReals')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Realisation $realisation = null;
+
+    #[ORM\Column]
+    private ?int $duree = null;
 
     public function getId(): ?int
     {
@@ -73,17 +74,6 @@ class LigneReal
         return $this;
     }
 
-    public function getDuree(): ?\DateInterval
-    {
-        return $this->duree;
-    }
-
-    public function setDuree(\DateInterval $duree): static
-    {
-        $this->duree = $duree;
-
-        return $this;
-    }
 
     public function getRealisation(): ?Realisation
     {
@@ -95,5 +85,24 @@ class LigneReal
         $this->realisation = $realisation;
 
         return $this;
+    }
+
+    public function getDuree(): ?int
+    {
+        return $this->duree;
+    }
+
+    public function setDuree(int $duree): static
+    {
+        $this->duree = $duree;
+
+        return $this;
+    }
+
+    public function getWrittenDuree(): string
+    {
+        $hours = intdiv($this->getDuree(), 60);
+        $minutes = $this->getDuree() % 60;
+        return sprintf('%d h %d mn', $hours, $minutes);
     }
 }

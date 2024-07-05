@@ -36,19 +36,37 @@ class AppFixtures extends Fixture
         $firstUser->setRoles(['ROLE_ADMIN']);
 
         $secondUser = new User();
-        $secondUser->setEmail('user1@user.fr');
-        $secondUser->setUsername('Mr Utilisateur 1');
+        $secondUser->setEmail('atelier1@atelier.fr');
+        $secondUser->setUsername('Mr Atelier 1');
         
         // encode the plain password
         $secondUser->setPassword(
             $this->passwordHasher->hashPassword(
                 $secondUser,
-                'User1'
+                'Atelier1'
             )
         );
+        
+        $secondUser->setRoles(['ROLE_ATELIER']);
+
+
+        $thirdUser = new User();
+        $thirdUser->setEmail('compta1@compta.fr');
+        $thirdUser->setUsername('Mr Compta 1');
+        
+        // encode the plain password
+        $thirdUser->setPassword(
+            $this->passwordHasher->hashPassword(
+                $thirdUser,
+                'Compta1'
+            )
+        );
+        
+        $thirdUser->setRoles(['ROLE_COMPTA']);
 
         $manager->persist($firstUser);
         $manager->persist($secondUser);
+        $manager->persist($thirdUser);
 
         for($i=0; $i<20; $i++){
             $ope = new Operation();
@@ -67,7 +85,11 @@ class AppFixtures extends Fixture
             $machine = new Machine();
             $machine->setName("Machine ".$i);
             $manager->persist($machine);
-        }     
+        }
+        
+        
+
+
 
         $manager->flush();
     }

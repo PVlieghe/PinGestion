@@ -27,8 +27,36 @@
 							<span class="navbar-toggler-icon"></span>
 						</button>
 						{% if app.user %}
+						
 						<div class="collapse navbar-collapse show" id="navbarColor01">
 							<ul class="navbar-nav me-auto">
+							{% if is_granted('ROLE_ADMIN') %}
+									<li class="nav-item">
+											<a class="nav-link mt-2" target="_blank" href="{{ path('app_admin_dashboard') }}">Admin
+											</a>
+									</li>
+									<li class="nav-item dropdown">
+										<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">ATELIER</a>
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="{{ path('app_realisation_index') }}">Réalisations</a>
+											<a class="dropdown-item" href="{{ path('app_poste_index') }}">Postes</a>
+											<a class="dropdown-item" href="{{ path('app_machine_index') }}">Machines</a>											
+											<a class="dropdown-item" href="{{ path('app_gamme_index') }}">Gammes</a>											
+											<a class="dropdown-item" href="{{ path('app_piece_index') }}">Pièces</a>
+											<a class="dropdown-item" href="{{ path('app_operation_index') }}">Operations</a>
+										</div>
+									</li>
+									<li class="nav-item dropdown">
+										<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">COMPTA</a>
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="">Commandes</a>
+											<a class="dropdown-item" href="">Devis</a>
+											<a class="dropdown-item" href="">Ventes</a>											
+											<a class="dropdown-item" href="">Achats</a>											
+										</div>
+									</li>
+								
+							{% elseif is_granted('ROLE_ATELIER') %}
 								<li class = "nav-item">
 									<a class="nav-link"  href="{{ path('app_menu_main') }}"><i class="bi bi-house"></i>
 
@@ -58,12 +86,8 @@
 									<a class="nav-link mt-2" target="_blank" href="{{ path('app_realisation_index') }}">Réalisations
 										</a>
 								</li>
-								<li class="nav-item">
-									{% if is_granted('ROLE_ADMIN') %}
-										<a class="nav-link mt-2" target="_blank" href="{{ path('app_admin_dashboard') }}">Admin
-										</a>
-									{% endif %}
-								</li>
+								{% endif %}
+								
 							</ul>
 							<div class = "navbar-nav mr-auto nav-item">
 							

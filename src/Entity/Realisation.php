@@ -108,4 +108,18 @@ class Realisation
 
         return $this;
     }
+
+    public function getTotalDuree(): string
+    {
+        $totalMinutes = 0;
+
+        foreach ($this->ligneReals as $ligneReal) {
+            $totalMinutes += $ligneReal->getDuree();
+        }
+
+        $hours = intdiv($totalMinutes, 60);
+        $minutes = $totalMinutes % 60;
+
+        return sprintf('%d h %d mn', $hours, $minutes);
+    }
 }

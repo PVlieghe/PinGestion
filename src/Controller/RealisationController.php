@@ -9,18 +9,21 @@ use App\Entity\Piece;
 use App\Entity\Poste;
 use App\Entity\LigneReal;
 use RealisationPieceType;
+use App\Entity\QualifPoste;
 use App\Entity\Realisation;
 use App\Form\LigneRealType;
+use App\Entity\QualifMachine;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\RealisationRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/realisation')]
+#[Route('atelier/realisation')]
 class RealisationController extends AbstractController
 {
     #[Route('/', name: 'app_realisation_index', methods: ['GET'])]
@@ -85,21 +88,27 @@ class RealisationController extends AbstractController
             $form = $this->createForm(RealisationType::class, $realisation);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                foreach ($realisation->getLigneReals() as $ligneReal) {
-
-            
-
+                foreach ($realisation->getLigneReals() as $key => $ligneReal) {
+                    $selectedPiece ->setStock($selectedPiece ->getStock() + 1);
+                    // Récupérez les valeurs des champs non mappés duree_hours et duree_minutes
+                    $hours = $form->get('ligneReals')[$key]->get('duree_hours')->getData() ?? 0;
+                    $minutes = $form->get('ligneReals')[$key]->get('duree_minutes')->getData() ?? 0;
+                    
+                    // Calculez la durée totale en minutes
+                    $totalMinutes = ($hours * 60) + $minutes;
+                    
+                    // Définissez la durée en minutes
+                    $ligneReal->setDuree($totalMinutes);
             
                     // Persistez chaque LigneReal si nécessaire
                     $entityManager->persist($ligneReal);
                 }
             
-                // Persistez la Realisation complète si nécessaire
+                // Persistez la Realisation
                 $entityManager->persist($realisation);
                 $entityManager->flush();
-            
                 return $this->redirectToRoute('app_realisation_index', [
-                    $success = "Vous avez créé une réalisation pour la pièce: " . $realisation -> getGamme() ->getPiece() ->getLibelle() . "."
+                    'success' => "Vous avez créé une réalisation pour la pièce: " . $realisation -> getGamme() ->getPiece() ->getLibelle() . "."
                 ]);
             }
         }
@@ -107,24 +116,9 @@ class RealisationController extends AbstractController
     
         return $this->render('realisation/newSecond.html.twig', [
             'form' => $form,
+            'operations' => $operations,
             'selectedPiece' => $selectedPiece,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_realisation_delete', methods: ['POST'])]
-    public function delete(Request $request, Poste $poste, EntityManagerInterface $entityManager): Response
-    {
-        $success = null;
-
-        if ($this->isCsrfTokenValid('delete'.$poste->getId(), $request->getPayload()->getString('_token'))) {
-            $success =  "Le poste \"" .$poste->getName(). "\" a bien été supprimé!";
-            $entityManager->remove($poste);
-            $entityManager->flush();
-
-        }
-
-        return $this->redirectToRoute('app_poste_index', [
-            'success' => $success
-        ], Response::HTTP_SEE_OTHER);
-    }
 }

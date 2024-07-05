@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/operation')]
+#[Route('atelier/operation')]
 class OperationController extends AbstractController
 {
     #[Route('/', name: 'app_operation_index', methods: ['GET'])]

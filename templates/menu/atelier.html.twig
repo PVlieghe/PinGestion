@@ -1,0 +1,175 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Menu principal{% endblock %}
+
+{% block body %}
+    <div class="body">
+           <style>
+            body {
+            background-color: #f2f2f2; /* Fond d'écran gris */
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-container, .form-container {
+            flex: 1;
+            margin: 10px;
+        }
+        .form-container {
+            max-width: 400px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: black;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Ligne de fond gris clair */
+        }
+        tr:nth-child(odd) {
+            background-color: #fff; /* Ligne de fond blanc */
+        }
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+            .custom-card {
+        border: 1px solid #ced4da; /* Bordure grise */
+        border-radius: 10px; /* Coins arrondis */
+        overflow: hidden; /* Pour les coins arrondis */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Ombre légère */
+        background-color: #f8f9fa; /* Couleur de fond */
+    }
+
+    .custom-card .card-img-top {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .custom-card .card-body {
+        padding: 20px;
+    }
+
+    .custom-card .card-title {
+        font-size: 1.25rem; /* Taille du titre */
+        font-weight: bold; /* Gras */
+        margin-bottom: 10px; /* Espacement en bas du titre */
+    }
+
+    .custom-card .card-text {
+        color: #6c757d; /* Couleur du texte */
+        font-size: 1rem; /* Taille du texte */
+    }
+
+    .custom-card .btn {
+        background-color: #007bff; /* Couleur de fond du bouton */
+        border-color: #007bff; /* Couleur de la bordure du bouton */
+        color: #fff; /* Couleur du texte du bouton */
+    }
+
+    .custom-card .btn:hover {
+        background-color: #0056b3; /* Couleur de fond du bouton au survol */
+        border-color: #0056b3; /* Couleur de la bordure du bouton au survol */
+    }
+    </style>
+
+<div class="row m-1">
+    <h2 class="p-2 border border-primary border-2 inline-block w-auto"> Bienvenue sur PinGestion! </h2>
+</div>
+
+<div class="container">
+    <div class="row mb-3">
+        <h3 class="col mb-0">Menu Principal: ATELIER</h3>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <!-- Première ligne -->
+        <div class="col">
+            <div class="card custom-card h-100">
+                <img src="chemin/vers/image1.jpg" class="card-img-top" alt="Image 1">
+                <div class="card-body">
+                    <h5 class="card-title">Pièce</h5>
+                    <p class="card-text">Gestion des pièces et de leurs informations. Lier une pièce à une gamme.</p>
+                    <a href="{{ path('app_piece_index') }}" class="btn btn-primary">Accéder</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card custom-card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Machine</h5>
+                    <p class="card-text">Gestion des machines et de leur utilisation sur les différents postes ainsi qu'avec les opérations.</p>
+                    <a href="{{ path('app_machine_index') }}" class="btn btn-primary">Accéder</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deuxième ligne -->
+        <div class="col">
+            <div class="card custom-card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Poste</h5>
+                    <p class="card-text">Gestion des postes et de leurs qualifications pour l'utilisation des machines.</p>
+                    <a href="{{ path('app_poste_index') }}" class="btn btn-primary">Accéder</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card custom-card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Opération</h5>
+                    <p class="card-text">Gestion des opération et de leur liaison avec les gammes ainsi qu'avec les machines.</p>
+                    <a href="{{ path('app_operation_index') }}" class="btn btn-primary">Accéder</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Troisième ligne -->
+        <div class="col">
+            <div class="card custom-card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Gamme</h5>
+                    <p class="card-text">Gestion des gammes et de leur pièce associée.</p>
+                    <a href="{{ path('app_gamme_index') }}" class="btn btn-primary">Accéder</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card custom-card h-100">
+                <img src="chemin/vers/image6.jpg" class="card-img-top" alt="Image 6">
+                <div class="card-body">
+                    <h5 class="card-title">Réalisation</h5>
+                    <p class="card-text">Déclaration de la réalisation d'une pièce.</p>
+                    <a href="{{ path('app_realisation_index') }}" class="btn btn-primary">Accéder</a>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+{% endblock %}

@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Poste;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Poste>
@@ -16,6 +17,16 @@ class PosteRepository extends ServiceEntityRepository
         parent::__construct($registry, Poste::class);
     }
 
+
+    public function findQualifiedPostesForUser(User $user)
+    {
+        return $this->createQueryBuilder('p')
+            ->innerJoin('p.qualifPostes', 'qp')
+            ->andWhere('qp.usr = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
     //    /**
     //     * @return Poste[] Returns an array of Poste objects
     //     */
